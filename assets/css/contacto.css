@@ -1,0 +1,463 @@
+/* =====================================================================
+   SCALA PERÚ — CONTACTO
+   Tarjeta corporativa premium (línea Linear / Stripe / Vercel):
+   formulario + asistente virtual (SVG externo), redes sociales, y
+   tarjeta independiente de llamada a la acción para validar
+   certificados. La lógica del formulario no cambia: solo se redecoran
+   los mismos ids/clases funcionales (formularioContacto, mensajeError...).
+   ===================================================================== */
+:root{
+  --cont-navy-950:var(--navy-950, #0A1B2E);
+  --cont-navy-800:var(--navy-800, #1B3A5C);
+  --cont-azul-inst:#14477A;      /* azul institucional — acento principal */
+  --cont-azul-claro:#2E6FB0;     /* azul claro — acentos secundarios */
+  --cont-azul-medio:#154C82;     /* azul medio — panel del robot, no muy oscuro */
+  --cont-celeste-tenue:#EAF3FB;
+
+  --cont-bg:#FFFFFF;
+  --cont-frame:#EEF2F6;          /* marco neutro que envuelve los paneles internos */
+  --cont-borde:#E9EDF1;
+  --cont-borde-fuerte:#D3DBE2;
+  --cont-panel-linea:rgba(10,27,46,.06);
+  --cont-texto:var(--ink, #122033);
+  --cont-texto-sec:#3C4B5A;      /* gris más oscuro para el subtítulo */
+  --cont-texto-tenue:var(--steel-300, #9AACB8);
+
+  --cont-font-display:var(--font-display, 'Space Grotesk', sans-serif);
+  --cont-font-ui:var(--font-ui, 'IBM Plex Sans', sans-serif);
+
+  --cont-ease:cubic-bezier(.4,0,.2,1);
+  --cont-dur:.25s;
+}
+
+@media (prefers-reduced-motion: reduce){
+  .contacto *{
+    animation-duration:.001ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.001ms !important;
+    scroll-behavior:auto !important;
+  }
+}
+
+/* ---------------------------------------------------------------------
+   SECCIÓN + FONDO CUADRICULADO SUTIL
+--------------------------------------------------------------------- */
+.contacto{
+  position:relative;
+  isolation:isolate;
+  background:var(--cont-bg);
+  padding:clamp(3.5rem, 7vw, 5rem) clamp(1.25rem, 5vw, 2rem) clamp(4.5rem, 8vw, 6.5rem);
+  font-family:var(--cont-font-ui);
+  color:var(--cont-texto);
+}
+
+.contacto_malla{
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  background-image:
+    linear-gradient(to right, rgba(20,71,122,.11) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(20,71,122,.11) 1px, transparent 1px);
+  background-size:64px 64px;
+  -webkit-mask-image:radial-gradient(ellipse 92% 85% at 50% 32%, #000 0%, transparent 92%);
+  mask-image:radial-gradient(ellipse 92% 85% at 50% 32%, #000 0%, transparent 92%);
+}
+
+.contacto > h2.subt{
+  position:absolute;
+  width:1px; height:1px;
+  overflow:hidden;
+  clip:rect(0 0 0 0);
+  white-space:nowrap;
+}
+
+@keyframes contAparecer{
+  from{ opacity:0; transform:translateY(14px); }
+  to{ opacity:1; transform:translateY(0); }
+}
+
+/* ---------------------------------------------------------------------
+   1. ENCABEZADO
+--------------------------------------------------------------------- */
+.contacto_head{
+  max-width:800px;
+  margin:0 auto clamp(1.75rem, 3.2vw, 2.25rem);
+  text-align:center;
+  animation:contAparecer .6s var(--cont-ease) both;
+}
+
+.contacto_eyebrow{
+  display:block;
+  font-size:.76rem;
+  font-weight:600;
+  letter-spacing:.24em;
+  text-transform:uppercase;
+  color:var(--cont-azul-inst);
+  margin-bottom:1rem;
+}
+
+.contacto_titulo{
+  font-family:var(--cont-font-display);
+  font-weight:700;
+  font-size:clamp(1.9rem, 3.6vw, 2.7rem);
+  line-height:1.16;
+  letter-spacing:-.015em;
+  color:var(--cont-navy-950);
+  margin:0 0 1.6rem;
+}
+
+.contacto_subtitulo{
+  max-width:460px;
+  margin:0 auto;
+  font-size:1.06rem;
+  line-height:1.6;
+  color:var(--cont-texto-sec);
+}
+
+/* ---------------------------------------------------------------------
+   2. VALIDAR CERTIFICADO — mensaje simple debajo de la tarjeta
+--------------------------------------------------------------------- */
+.contacto_validarSimple{
+  max-width:1080px;
+  margin:clamp(4rem, 2.4vw, 2rem) auto 0;
+  text-align:center;
+  font-size:1.2rem;
+  color:var(--cont-texto-sec);
+}
+
+.contacto_validarLink{
+  display:inline-flex;
+  align-items:center;
+  gap:.4rem;
+  margin-left:.5rem;
+  font-weight:600;
+  color:var(--cont-azul-inst);
+  border-bottom:1.5px solid transparent;
+  transition:border-color var(--cont-dur) var(--cont-ease),
+             gap var(--cont-dur) var(--cont-ease);
+}
+.contacto_validarLink svg{
+  width:15px;
+  height:15px;
+  transition:transform var(--cont-dur) var(--cont-ease);
+}
+.contacto_validarLink:hover{
+  border-color:currentColor;
+}
+.contacto_validarLink:hover svg{
+  transform:translateX(3px);
+}
+
+/* ---------------------------------------------------------------------
+   3. TARJETA PRINCIPAL — MARCO + PANELES INTERNOS
+   En vez de una caja blanca con una línea divisoria, la tarjeta es un
+   "marco" neutro (como una matriz de exhibición) que aloja dos paneles
+   independientes y elevados: el formulario y el panel corporativo del
+   asistente. Cada panel tiene su propia profundidad, y el panel derecho
+   incorpora marcas de esquina discretas, un guiño sutil al lenguaje de
+   planos técnicos de una empresa de ingeniería.
+--------------------------------------------------------------------- */
+.contacto_card{
+  position:relative;
+  max-width:1100px;
+  margin:0 auto;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:0;
+  background:var(--cont-bg);
+  border-radius:0;
+  padding:0;
+  box-shadow:0 0 70px rgba(10,27,46,.32);
+  animation:contAparecer .7s .1s var(--cont-ease) both;
+}
+
+.contacto_formCol{
+  background:var(--cont-bg);
+  border-radius:0;
+  padding:clamp(2.25rem, 4vw, 3.25rem);
+}
+
+.contacto_asistenteCol{
+  position:relative;
+  padding:clamp(2.25rem, 4vw, 3rem) clamp(1.85rem, 3.2vw, 2.5rem);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  gap:1.75rem;
+  background:var(--cont-azul-medio);
+  border-left:1px solid rgba(255,255,255,.08);
+  border-radius:0;
+  overflow:hidden;
+}
+
+/* ---------------------------------------------------------------------
+   4. FORMULARIO
+--------------------------------------------------------------------- */
+.formularioContacto{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:1.4rem 1.25rem;
+}
+
+.contacto_campo{
+  display:flex;
+  flex-direction:column;
+  gap:.5rem;
+}
+.contacto_campo--full{
+  grid-column:1 / -1;
+}
+
+.formularioLabel{
+  display:flex;
+  align-items:center;
+  gap:.45rem;
+  font-size:1rem;
+  font-weight:700;
+  letter-spacing:.02em;
+  color:var(--cont-navy-950);
+}
+.formularioLabel::before{
+  content:'';
+  width:3px;
+  height:11px;
+  border-radius:1px;
+  background:var(--cont-azul-inst);
+  opacity:.8;
+}
+
+.formularioLabel_icono{
+  width:25px;
+  height:25px;
+  color:var(--cont-azul-inst);
+  flex-shrink:0;
+}
+
+.textResaltado{
+  color:var(--cont-azul-inst);
+}
+
+.formularioInput{
+  width:100%;
+  font-family:var(--cont-font-ui);
+  font-size:.90rem;
+  color:#0B1520;
+  background:#FFFFFF;
+  border:1.5px solid #828282;
+  border-radius:10px;
+  padding:.95rem 1.05rem;
+  transition:border-color var(--cont-dur) var(--cont-ease),
+             box-shadow var(--cont-dur) var(--cont-ease);
+}
+.formularioInput::placeholder{
+  color:#9AA6AF;
+}
+.formularioInput:hover{
+  border-color:var(--cont-azul-inst);
+}
+.formularioInput:focus{
+  outline:none;
+  border-color:var(--cont-azul-inst);
+  box-shadow:0 0 0 3px rgba(20,71,122,.14);
+}
+
+textarea.formularioInput{
+  resize:vertical;
+  min-height:128px;
+  line-height:1.55;
+}
+
+/* ---------------------------------------------------------------------
+   5. BARRA DE ACCIÓN — botón enviar, separado por una línea sutil
+--------------------------------------------------------------------- */
+.contacto_accion{
+  margin-top:.4rem;
+  padding-top:1.5rem;
+  border-top:1px solid var(--cont-borde-fuerte);
+  display:flex;
+  flex-direction:column;
+  gap:.6rem;
+}
+
+.formularioBoton{
+  width:100%;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:.65rem;
+  padding:1.05rem 2.15rem;
+  font-family:var(--cont-font-ui);
+  font-size:.95rem;
+  font-weight:700;
+  letter-spacing:.02em;
+  color:#FFFFFF;
+  background:var(--cont-navy-950);
+  border-radius:10px;
+  transition:background var(--cont-dur) var(--cont-ease),
+             transform var(--cont-dur) var(--cont-ease);
+}
+.formularioBoton_flecha{
+  width:18px;
+  height:18px;
+  transition:transform var(--cont-dur) var(--cont-ease);
+}
+.formularioBoton:hover{
+  background:var(--cont-azul-inst);
+  transform:translateY(-2px);
+}
+.formularioBoton:hover .formularioBoton_flecha{
+  transform:translateX(3px);
+}
+.formularioBoton:active{
+  transform:translateY(0);
+}
+
+.mensajeError{
+  min-height:1.1em;
+  margin:0;
+  font-size:.84rem;
+  color:#B4232C;
+  text-align:center;
+}
+
+/* ---------------------------------------------------------------------
+   6. ASISTENTE VIRTUAL — SVG EXISTENTE (assets/imagenes/robot.svg)
+--------------------------------------------------------------------- */
+.contacto_robot{
+  position:relative;
+  width:100%;
+  height:clamp(220px, 32vw, 320px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.contacto_robot::before{
+  content:'';
+  position:absolute;
+  width:70%;
+  aspect-ratio:1/1;
+  border-radius:50%;
+  /* Degradado radial: centro un poco más claro, bordes más oscuros → profundidad */
+  background:radial-gradient(
+    circle at 50% 42%,
+    rgba(255,255,255,.20) 0%,
+    rgba(255,255,255,.11) 40%,
+    rgba(10,27,46,.06) 78%,
+    rgba(10,27,46,.14) 100%
+  );
+  /* Borde muy fino, tono azul claro del sitio, baja opacidad */
+  border:1px solid rgba(46,111,176,.18);
+  /* Halo interior alrededor del robot + sombra difusa suave detrás */
+  box-shadow:
+    inset 0 0 34px rgba(46,111,176,.22),
+    0 0 55px 6px rgba(10,27,46,.18);
+  z-index:0;
+}
+
+.contacto_robotImg{
+  position:relative;
+  z-index:1;
+  height:85%;
+  width:auto;
+  max-width:100%;
+  object-fit:contain;
+  filter:drop-shadow(0 18px 22px rgba(0,0,0,.28));
+}
+
+/* Imagen estática: anula cualquier transform/transition en hover
+   (incluida una posible regla global sobre <img>), sin afectar al
+   resto de elementos animados de la sección. */
+.contacto_robotImg,
+.contacto_robotImg:hover{
+  animation:none !important;
+  transition:none !important;
+  transform:none !important;
+}
+
+/* ---------------------------------------------------------------------
+   7. REDES SOCIALES
+--------------------------------------------------------------------- */
+.contacto_redes{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:1.1rem;
+  padding-top:1.75rem;
+  border-top:1px solid rgba(255,255,255,.22);
+  width:100%;
+  max-width:280px;
+}
+
+.contacto_redesTitulo{
+  font-size:.72rem;
+  font-weight:600;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.85);
+}
+
+.contacto_redesLista{
+  display:flex;
+  align-items:center;
+  gap:1rem;
+}
+
+.contacto_redLink{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:46px;
+  height:46px;
+  border-radius:50%;
+  border:1.5px solid #FFFFFF;
+  background:#FFFFFF;
+  transition:transform var(--cont-dur) var(--cont-ease),
+             box-shadow var(--cont-dur) var(--cont-ease);
+}
+.contacto_redLink svg{
+  width:20px;
+  height:20px;
+}
+.contacto_redLink:hover{
+  transform:translateY(-3px);
+  box-shadow:0 10px 18px -8px rgba(0,0,0,.35);
+}
+
+.contacto_redLink--linkedin{ color:#0A66C2; }
+.contacto_redLink--facebook{ color:#1877F2; }
+
+/* ---------------------------------------------------------------------
+   8. RESPONSIVE
+--------------------------------------------------------------------- */
+@media (max-width:900px){
+  .contacto_card{
+    grid-template-columns:1fr;
+  }
+  .contacto_robot{
+    height:260px;
+  }
+}
+
+@media (max-width:640px){
+  .formularioContacto{
+    grid-template-columns:1fr;
+  }
+  .contacto_campo{
+    grid-column:1 / -1;
+  }
+  .formularioBoton{
+    width:100%;
+  }
+  .contacto_validarSimple{
+    display:flex;
+    flex-direction:column;
+    gap:.5rem;
+  }
+  .contacto_validarLink{
+    justify-content:center;
+    margin-left:0;
+  }
+}

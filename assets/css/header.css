@@ -1,0 +1,549 @@
+/* =====================================================================
+   SCALA PERÚ — HEADER & NAVEGACIÓN
+   ===================================================================== */
+:root{
+  /* Color — paleta "plano de ingeniería" */
+  --navy-950:#0A1B2E;
+  --navy-900:#0F2942;
+  --navy-800:#1B3A5C;
+  --steel-600:#000000;
+  --steel-300:#9AACB8;
+  --line-soft:rgba(15,41,66,.09);
+  --amber-500:#E1A339; 
+  --amber-600:#C98A22;
+  --white:#FFFFFF;
+  --ink:#122033;
+  /* Celeste corporativo — mismo tono que ya usa el resto del sitio como
+     color de acento (etiquetas de sección, subrayados). Se usa aquí
+     como color del botón "Contacto": más sobrio que el dorado, pero
+     sigue siendo un azul distinto al navy del texto, así que destaca
+     igual sin perder seriedad. */
+  --celeste-500:#19669c;
+  --celeste-600:#20618F;
+
+  /* Header */
+  --header-h:clamp(58px, 4.8vw, 94px);
+  --header-bg:rgba(255,255,255,.72);
+  --header-bg-scroll:rgba(255,255,255,.92);
+  --header-shadow:0 1px 0 var(--line-soft), 0 12px 30px -18px rgba(10,27,46,.35);
+
+  /* Tipografía */
+  --font-display:'Space Grotesk', 'IBM Plex Sans', sans-serif;
+  --font-ui:'IBM Plex Sans', sans-serif;
+
+  /* Ritmo / espaciado fluido */
+  --space-xs:clamp(.4rem,.6vw,.6rem);
+  --space-sm:clamp(.6rem,1vw,1rem);
+  --space-md:clamp(1rem,2vw,1.75rem);
+  --space-lg:clamp(1.75rem,3.5vw,3rem);
+
+  /* Transiciones */
+  --ease:cubic-bezier(.4,0,.2,1);
+  --dur:.28s;
+
+  /* Bottom nav (móvil) */
+  --bottom-nav-h:calc(60px + env(safe-area-inset-bottom));
+}
+
+/* ---------------------------------------------------------------------
+   2. RESET / BASE
+--------------------------------------------------------------------- */
+*,*::before,*::after{ box-sizing:border-box; }
+body{ margin:0; }
+
+a{ text-decoration:none; color:inherit; }
+ul{ list-style:none; margin:0; padding:0; }
+button{ font:inherit; border:none; background:none; cursor:pointer; }
+img{ max-width:100%; display:block; }
+
+html{ scroll-behavior:smooth; }
+@media (prefers-reduced-motion:reduce){
+  html{ scroll-behavior:auto; }
+  *,*::before,*::after{ animation-duration:.001ms !important; transition-duration:.001ms !important; }
+}
+
+body{
+  padding-top:var(--header-h);
+}
+@media (max-width:767px){
+  body{ padding-bottom:var(--bottom-nav-h); }
+}
+
+/* ---------------------------------------------------------------------
+   3. HEADER — contenedor fijo, efecto glass
+--------------------------------------------------------------------- */
+.header{
+  position:fixed;
+  inset:0 0 auto 0;
+  z-index:1000;
+  height:var(--header-h);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:var(--space-md);
+  /* El padding lateral sigue exactamente el mismo clamp fluido de
+     siempre (nada cambia en móvil/tablet/desktop estándar). Se le suma
+     un segundo término con max() que solo entra en juego en pantallas
+     muy anchas: a partir de ahí, en vez de dejar que el logo y el menú
+     se separen hasta pegarse a los bordes del viewport (mucho "aire"
+     muerto en el centro), el padding crece para mantener el contenido
+     dentro de un ancho de referencia (~1760px), centrado — igual que
+     hace un .container en el resto del sitio, pero conservando el
+     fondo del header a todo lo ancho. */
+  padding-inline:max(clamp(1rem, 4vw, 3.5rem), calc((100vw - 1760px) / 2));
+
+  background:var(--header-bg);
+  backdrop-filter:blur(14px) saturate(140%);
+  -webkit-backdrop-filter:blur(14px) saturate(140%);
+  border-bottom:1px solid transparent;
+
+  font-family:var(--font-ui);
+  /* El fondo/borde usan una transición más larga que la del resto del
+     header (.5s en vez de --dur=.28s): ese cambio ocurre solo cuando
+     el header pasa de claro a oscuro entre secciones, un cambio más
+     grande que el de scroll, así que conviene que se sienta pausado y
+     elegante en vez de instantáneo. El box-shadow del scroll sigue en
+     --dur para que ese matiz más pequeño se sienta ágil. */
+  transition:background .5s var(--ease),
+             box-shadow var(--dur) var(--ease),
+             border-color .5s var(--ease);
+}
+
+/* Estado al hacer scroll (clase alternada por el JS existente) */
+.header.scroll{
+  background:var(--header-bg-scroll);
+  border-bottom-color:var(--line-soft);
+  box-shadow:var(--header-shadow);
+}
+
+/* ---------------------------------------------------------------------
+   4. LOGO
+--------------------------------------------------------------------- */
+.logo_a_container{
+  flex-shrink:0;
+  display:flex;
+  align-items:center;
+}
+
+.logo_container{
+  display:flex;
+  align-items:center;
+  gap:.65rem;
+  min-width:0; /* permite truncar sin romper layout */
+}
+
+.logo_header{
+  width:clamp(40px, 3vw, 50px);
+  height:clamp(40px, 3vw, 50px);
+  flex-shrink:0;
+  background:url("../imagenes/LogoSP.svg") center / contain no-repeat;
+  aspect-ratio:1 / 1;
+}
+
+.logo_name{
+  font-family:var(--font-display);
+  font-weight:600;
+  font-size:clamp(1rem, 1.4vw, 1.25rem);
+  letter-spacing:.06em;
+  color:var(--navy-950);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  position:relative;
+  padding-bottom:.15rem;
+  transition:color .5s var(--ease);
+}
+.logo_name::after{
+  content:"";
+  position:absolute;
+  left:0; bottom:0;
+  width:28%;
+  height:2px;
+  background:var(--amber-500);
+}
+
+/* ---------------------------------------------------------------------
+   5. NAVEGACIÓN DESKTOP (>992px)
+--------------------------------------------------------------------- */
+.nav{
+  display:flex;
+  align-items:center;
+  min-width:0;
+}
+
+.nav_ul{
+  display:flex;
+  align-items:center;
+  gap:clamp(.42rem, 1.65vw, 1.85rem);
+}
+
+.nav_link{
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  height:calc(var(--header-h) * .55);
+  font-family:var(--font-ui);
+  font-weight:500;
+  font-size:clamp(.8rem, .95vw, .92rem);
+  letter-spacing:.085em;
+  color:var(--steel-600);
+  white-space:nowrap;
+  transition:color .5s var(--ease);
+}
+
+/* Subrayado refinado: en vez de animar "width" (que reflowa y se ve
+   algo mecánico), se anima un scaleX con transform-origin al centro.
+   Es una animación por transform/opacity (más fluida y "premium"),
+   pero el resultado final —una línea ámbar del 60% centrada— es
+   idéntico al de antes, solo más suave al entrar y al salir. */
+.nav_link::after{
+  content:"";
+  position:absolute;
+  left:50%;
+  bottom:6px;
+  width:60%;
+  height:2px;
+  background:var(--amber-500);
+  transform:translateX(-50%) scaleX(0);
+  transform-origin:center;
+  opacity:0;
+  transition:transform .32s var(--ease), opacity .32s var(--ease);
+}
+
+.nav_link:hover,
+.nav_link:focus-visible{
+  color:var(--navy-950);
+}
+.nav_link:hover::after,
+.nav_link:focus-visible::after{
+  transform:translateX(-50%) scaleX(1);
+  opacity:1;
+}
+
+/* Página activa — indicador discreto de sección activa */
+.nav_link.active,
+.nav_link[aria-current="page"]{
+  color:var(--navy-950);
+  font-weight:600;
+}
+.nav_link.active::after,
+.nav_link[aria-current="page"]::after{
+  transform:translateX(-50%) scaleX(1);
+  opacity:1;
+}
+
+/* Botón "Contacto" — relleno celeste corporativo (mismo acento que ya
+   usa el resto del sitio) en vez de ámbar: sigue destacando con
+   claridad frente a los demás enlaces —da una jerarquía visual clara
+   entre logo → menú → llamada a la acción— pero de forma más sobria y
+   seria, acorde a una empresa de ingeniería. */
+.nav_li:last-child .nav_link{
+  flex-shrink:0;
+  padding-inline:clamp(1rem, 1.7vw, 1.65rem);
+  border:1.5px solid transparent;
+  border-radius:3px;
+  background:var(--celeste-500);
+  color:var(--white);
+  font-weight:600;
+  height:auto;
+  padding-block:.55rem;
+  box-shadow:0 2px 8px -2px rgba(44,134,199,.4);
+  transition:background .25s var(--ease),
+             color .25s var(--ease),
+             box-shadow .25s var(--ease),
+             transform .25s var(--ease);
+}
+.nav_li:last-child .nav_link::after{ display:none; }
+.nav_li:last-child .nav_link:hover,
+.nav_li:last-child .nav_link:focus-visible{
+  background:var(--celeste-600);
+  color:var(--white);
+  box-shadow:0 6px 16px -4px rgba(32,97,143,.5);
+  transform:translateY(-1px);
+}
+
+/* ---------------------------------------------------------------------
+   6. NAVEGACIÓN TABLET (768px–992px) */
+.nav_toggle_input{
+  display:none;
+}
+
+.nav_toggle_label{
+  display:none;
+}
+
+@media (min-width:768px) and (max-width:992px){
+  /* Antes el gap entre links era casi nulo (clamp mínimo de .33rem) y
+     el header se apretaba contra los bordes (padding-inline reducido a
+     la mitad respecto a desktop). Se sube todo un escalón para que se
+     sienta ordenado en vez de amontonado, sin llegar al tamaño de
+     desktop (ahí sí sobra ancho para más aire). */
+  .nav_ul{
+    gap:clamp(.7rem, 2.2vw, 1.4rem);
+  }
+
+  .nav_link{
+    font-size:clamp(.78rem, 1.1vw, .87rem);
+    letter-spacing:.06em;
+  }
+
+  .nav_li:last-child .nav_link{
+    padding-inline:clamp(1rem, 1.8vw, 1.4rem);
+    padding-block:.5rem;
+  }
+
+
+  .header{
+    padding-inline:clamp(1.5rem, 4vw, 2.75rem);
+    gap:clamp(1.1rem, 3vw, 1.9rem);
+  }
+
+  .logo_name{
+    font-size:clamp(.95rem, 1.6vw, 1.1rem);
+  }
+}
+
+/* ---------------------------------------------------------------------
+   6.1 HEADER
+--------------------------------------------------------------------- */
+@media (min-width:768px){
+  .header.dark{
+    background:var(--navy-950);
+    border-bottom-color:rgba(255,255,255,.1);
+    box-shadow:0 1px 0 rgba(255,255,255,.08), 0 12px 30px -18px rgba(0,0,0,.55);
+  }
+
+  .header.dark.scroll{
+    background:var(--navy-950);
+    border-bottom-color:rgba(255,255,255,.14);
+    box-shadow:0 1px 0 rgba(255,255,255,.1), 0 14px 34px -16px rgba(0,0,0,.6);
+  }
+
+  .header.dark .logo_name{
+    color:var(--white);
+  }
+
+  .header.dark .nav_link{
+    color:var(--white);
+  }
+  .header.dark .nav_link:hover,
+  .header.dark .nav_link:focus-visible{
+    color:var(--white);
+  }
+  .header.dark .nav_link.active,
+  .header.dark .nav_link[aria-current="page"]{
+    color:var(--white);
+  }
+
+  /* Botón "Contacto" en tema oscuro — mismo relleno celeste que en el
+     header claro, para que el botón se reconozca como el mismo
+     elemento (color fijo y distintivo) sin importar el fondo. */
+  .header.dark .nav_li:last-child .nav_link{
+    background:var(--celeste-500);
+    color:var(--white);
+    border-color:transparent;
+    box-shadow:0 2px 10px -2px rgba(0,0,0,.4);
+  }
+  .header.dark .nav_li:last-child .nav_link:hover,
+  .header.dark .nav_li:last-child .nav_link:focus-visible{
+    background:var(--celeste-600);
+    color:var(--white);
+  }
+}
+
+/* ---------------------------------------------------------------------
+   7. BOTTOM NAVIGATION — MÓVIL (<768px)
+--------------------------------------------------------------------- */
+@media (max-width:767px){
+  .nav_toggle_label{ display:none; } /* en móvil no hay hamburguesa */
+
+  /* FIX POSICIÓN: */
+  .header{
+    backdrop-filter:none;
+    -webkit-backdrop-filter:none;
+    background:var(--header-bg-scroll);
+  }
+
+  .nav{
+    position:fixed;
+    left:0; right:0; bottom:0;
+    top:auto;
+    height:var(--bottom-nav-h);
+    width:100%;
+    padding:0;
+    padding-bottom:env(safe-area-inset-bottom);
+    transform:none;
+    z-index:1000;
+
+    /* --- Glassmorphism --- */
+    background:rgba(255,255,255,.72);
+    backdrop-filter:blur(16px) saturate(160%);
+    -webkit-backdrop-filter:blur(16px) saturate(160%);
+    border-top:1px solid rgba(255,255,255,.5);
+    border-top-left-radius:18px;
+    border-top-right-radius:18px;
+    box-shadow:0 -1px 0 var(--line-soft), 0 -14px 30px -16px rgba(10,27,46,.35);
+    overflow:hidden;
+  }
+
+  .nav_ul{
+    height:60px;
+    width:100%;
+    flex-direction:row;
+    align-items:stretch;
+    justify-content:space-between;
+    gap:0;
+  }
+
+  .nav_li{
+    flex:1 1 0;
+    display:flex;
+  }
+
+  .nav_link{
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    gap:.2rem;
+    width:100%;
+    height:100%;
+    padding:0;
+    font-size:.62rem;
+    font-weight:500;
+    letter-spacing:.02em;
+    color:var(--steel-600);
+    text-align:center;
+  }
+
+  /* Restaura la indicación visual como "punto" activo en vez de subrayado */
+  .nav_link::after{
+    content:"";
+    position:static;
+    display:block;
+    width:4px; height:4px;
+    border-radius:50%;
+    background:transparent;
+    transform:none;
+    transition:background var(--dur) var(--ease);
+  }
+  .nav_link.active::after,
+  .nav_link[aria-current="page"]::after{
+    background:var(--amber-500);
+    width:4px; height:4px;
+  }
+  .nav_link.active,
+  .nav_link[aria-current="page"]{
+    color:var(--navy-950);
+  }
+
+
+  .nav_li:last-child .nav_link{
+    border:none;
+    border-radius:0;
+    padding:0;
+    background:none;
+    box-shadow:none;
+    color:var(--steel-600);
+  }
+  .nav_li:last-child .nav_link:hover,
+  .nav_li:last-child .nav_link:focus-visible{
+    background:none;
+    color:var(--navy-950);
+    box-shadow:none;
+    transform:none;
+  }
+
+  /* Iconos de línea fina */
+  .nav_link::before{
+    content:"";
+    display:block;
+    width:20px;
+    height:20px;
+    background-color:var(--steel-600);
+    -webkit-mask-repeat:no-repeat;
+    mask-repeat:no-repeat;
+    -webkit-mask-position:center;
+    mask-position:center;
+    -webkit-mask-size:contain;
+    mask-size:contain;
+    transition:background-color var(--dur) var(--ease);
+  }
+  .nav_link.active::before,
+  .nav_link[aria-current="page"]::before{
+    background-color:var(--navy-950);
+  }
+
+  /* Inicio */
+  .nav_li:nth-child(1) .nav_link::before{
+    -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5'%3E%3Cpath d='M3 11.2 12 4l9 7.2'/%3E%3Cpath d='M5 10v9h5v-6h4v6h5v-9'/%3E%3C/svg%3E");
+    mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5'%3E%3Cpath d='M3 11.2 12 4l9 7.2'/%3E%3Cpath d='M5 10v9h5v-6h4v6h5v-9'/%3E%3C/svg%3E");
+  }
+  /* Nosotros */
+  .nav_li:nth-child(2) .nav_link::before{
+    -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5'%3E%3Ccircle cx='12' cy='12' r='8.5'/%3E%3Cpath d='M12 8v.01M12 11v5.5'/%3E%3C/svg%3E");
+    mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5'%3E%3Ccircle cx='12' cy='12' r='8.5'/%3E%3Cpath d='M12 8v.01M12 11v5.5'/%3E%3C/svg%3E");
+  }
+  /* Proyectos */
+  .nav_li:nth-child(3) .nav_link::before{
+    -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5'%3E%3Crect x='4' y='9' width='7' height='11'/%3E%3Crect x='13' y='4' width='7' height='16'/%3E%3Cpath d='M6.5 12h2M6.5 15h2M15.5 7h2M15.5 10h2M15.5 13h2'/%3E%3C/svg%3E");
+    mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5'%3E%3Crect x='4' y='9' width='7' height='11'/%3E%3Crect x='13' y='4' width='7' height='16'/%3E%3Cpath d='M6.5 12h2M6.5 15h2M15.5 7h2M15.5 10h2M15.5 13h2'/%3E%3C/svg%3E");
+  }
+  /* Clientes */
+  .nav_li:nth-child(4) .nav_link::before{
+    -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5'%3E%3Ccircle cx='9' cy='9' r='3'/%3E%3Cpath d='M3.5 19c0-3 2.5-5.2 5.5-5.2s5.5 2.2 5.5 5.2'/%3E%3Ccircle cx='17.5' cy='9.5' r='2.3'/%3E%3Cpath d='M15.5 13.7c2.3.2 4.3 2.1 4.3 4.6'/%3E%3C/svg%3E");
+    mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5'%3E%3Ccircle cx='9' cy='9' r='3'/%3E%3Cpath d='M3.5 19c0-3 2.5-5.2 5.5-5.2s5.5 2.2 5.5 5.2'/%3E%3Ccircle cx='17.5' cy='9.5' r='2.3'/%3E%3Cpath d='M15.5 13.7c2.3.2 4.3 2.1 4.3 4.6'/%3E%3C/svg%3E");
+  }
+  /* Contacto */
+  .nav_li:nth-child(5) .nav_link::before{
+    -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5'%3E%3Crect x='3.5' y='5.5' width='17' height='13' rx='1'/%3E%3Cpath d='M4 6.5l8 6.2 8-6.2'/%3E%3C/svg%3E");
+    mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5'%3E%3Crect x='3.5' y='5.5' width='17' height='13' rx='1'/%3E%3Cpath d='M4 6.5l8 6.2 8-6.2'/%3E%3C/svg%3E");
+  }
+
+  /* Oculta el logo en el header móvil solo si el nombre no cabe*/
+  .logo_name{ font-size:.95rem; }
+}
+
+/* Ajuste fino para teléfonos muy angostos (320–375px) */
+@media (max-width:374px){
+  .nav_link{ font-size:.56rem; }
+  .nav_link::before{ width:18px; height:18px; }
+  .logo_name{ font-size:.85rem; }
+}
+
+/* ---------------------------------------------------------------------
+   8. ACCESIBILIDAD / UTILIDADES
+--------------------------------------------------------------------- */
+.nav_link:focus-visible,
+.nav_toggle_label:focus-visible{
+  outline:2px solid var(--amber-500);
+  outline-offset:3px;
+  border-radius:2px;
+}
+
+/* Evita cualquier desbordamiento horizontal en toda la página */
+html, body{
+  max-width:100%;
+  overflow-x:hidden;
+}
+
+@media (max-width:767px){
+  body{
+    padding-top:0;
+  }
+
+  .header,
+  .header.scroll{
+    height:0;
+    min-height:0;
+    padding:0;
+    margin:0;
+    border:none;
+    box-shadow:none;
+    background:transparent;
+    overflow:hidden;
+  }
+
+  .logo_a_container{
+    display:none;
+  }
+}

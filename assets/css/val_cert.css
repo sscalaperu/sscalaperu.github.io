@@ -1,0 +1,460 @@
+/* =====================================================================
+   SCALA PERÚ — VALIDACIÓN DE CERTIFICADOS
+   Misma identidad visual que contacto.css: azul institucional / navy /
+   blanco, tarjetas rectangulares con sombra completa (sin bordes).
+   ===================================================================== */
+/* ---------------------------------------------------------------------
+   0.0 LAYOUT DE PÁGINA — footer siempre pegado abajo
+   No existe un archivo de layout global en el proyecto (cada sección
+   trae su propio CSS), así que esta regla se agrega aquí para que el
+   #footer quede fijo al fondo del viewport incluso cuando el contenido
+   de #main es corto (por ejemplo, al entrar a /validar sin haber
+   buscado todavía). Como #body/#main/#footer son ids únicos de toda
+   la página (definidos en script.js), este fix beneficia a TODAS las
+   secciones, no solo a validación.
+--------------------------------------------------------------------- */
+#body{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+}
+#main{
+  flex:1 0 auto;
+}
+#footer{
+  flex-shrink:0;
+}
+
+:root{
+  --vc-navy-950:var(--navy-950, #0A1B2E);
+  --vc-azul-inst:#14477A;
+  --vc-azul-claro:#2E6FB0;
+  --vc-verde:#1E8E5A;
+  --vc-verde-bg:#EAF6EF;
+  --vc-ambar:#B8790C;
+  --vc-ambar-bg:#FDF3E3;
+  --vc-texto:#122033;
+  --vc-texto-sec:#3C4B5A;
+  --vc-borde:#E4E9EE;
+  --vc-font-ui:var(--font-ui, 'IBM Plex Sans', sans-serif);
+  --vc-font-display:var(--font-display, 'Space Grotesk', sans-serif);
+  --vc-ease:cubic-bezier(.4,0,.2,1);
+}
+
+#resultado{
+  display:flex;
+  flex-direction:column;
+  gap:1.25rem;
+  max-width:640px;
+  margin:0 auto;
+  font-family:var(--vc-font-ui);
+}
+
+@media (min-width:860px){
+  #resultado{ max-width:980px; }
+}
+
+/* ---------------------------------------------------------------------
+   0. SECCIÓN + HEADER — mismo patrón visual que .contacto
+--------------------------------------------------------------------- */
+.valCert{
+  position:relative;
+  isolation:isolate;
+  background:#FFFFFF;
+  padding:clamp(3.5rem, 7vw, 5rem) clamp(1.25rem, 5vw, 2rem) clamp(4.5rem, 8vw, 6.5rem);
+  font-family:var(--vc-font-ui);
+  color:var(--vc-texto);
+}
+
+.valCert_malla{
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  background-image:
+    linear-gradient(to right, rgba(20,71,122,.11) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(20,71,122,.11) 1px, transparent 1px);
+  background-size:64px 64px;
+  -webkit-mask-image:radial-gradient(ellipse 92% 85% at 50% 32%, #000 0%, transparent 92%);
+  mask-image:radial-gradient(ellipse 92% 85% at 50% 32%, #000 0%, transparent 92%);
+}
+
+.valCert > h2.subt{
+  position:absolute;
+  width:1px; height:1px;
+  overflow:hidden;
+  clip:rect(0 0 0 0);
+  white-space:nowrap;
+}
+
+.valCert_head{
+  max-width:640px;
+  margin:0 auto 2rem;
+  text-align:center;
+}
+
+.valCert_eyebrow{
+  display:block;
+  font-size:.76rem;
+  font-weight:600;
+  letter-spacing:.24em;
+  text-transform:uppercase;
+  color:var(--vc-azul-inst);
+  margin-bottom:1rem;
+}
+
+.valCert_titulo{
+  font-family:var(--vc-font-display);
+  font-weight:700;
+  font-size:clamp(1.9rem, 3.6vw, 2.7rem);
+  line-height:1.16;
+  letter-spacing:-.015em;
+  color:var(--vc-navy-950);
+  margin:0 0 .8rem;
+}
+
+.valCert_subtitulo{
+  max-width:460px;
+  margin:0 auto;
+  font-size:1.06rem;
+  line-height:1.6;
+  color:var(--vc-texto-sec);
+}
+
+/* ---------------------------------------------------------------------
+   0.1 BUSCADOR — input de código + botón validar
+--------------------------------------------------------------------- */
+.valCert_inp{
+  display:flex;
+  gap:.75rem;
+  max-width:640px;
+  margin:0 auto 2.5rem;
+}
+
+.valCert_inp_ph{
+  flex:1;
+  font-family:var(--vc-font-ui);
+  font-size:.95rem;
+  color:#0B1520;
+  background:#FFFFFF;
+  border:1.5px solid #A7C1DA;
+  border-radius:10px;
+  padding:.95rem 1.1rem;
+  transition:border-color .2s var(--vc-ease), box-shadow .2s var(--vc-ease);
+}
+.valCert_inp_ph::placeholder{ color:#9AA6AF; }
+.valCert_inp_ph:hover{ border-color:var(--vc-azul-inst); }
+.valCert_inp_ph:focus{
+  outline:none;
+  border-color:var(--vc-azul-inst);
+  box-shadow:0 0 0 3px rgba(20,71,122,.14);
+}
+
+@media (max-width:560px){
+  .valCert_inp{ flex-direction:column; }
+}
+
+/* ---------------------------------------------------------------------
+   0.2 GRID DE RESULTADO — en móvil todo apilado (como antes). En
+   desktop se divide en dos columnas: la tarjeta de datos a la
+   izquierda, y privacidad + cta apiladas a la derecha, para no dejar
+   tanto espacio vacío debajo de la tarjeta de datos.
+--------------------------------------------------------------------- */
+.valCert_grid{
+  display:flex;
+  flex-direction:column;
+  gap:1.25rem;
+}
+
+.valCert_grid_col--extra{
+  display:flex;
+  flex-direction:column;
+  gap:1.25rem;
+}
+
+@media (min-width:860px){
+  .valCert_grid{
+    flex-direction:row;
+    align-items:stretch;
+    gap:1.5rem;
+  }
+  .valCert_grid_col--datos,
+  .valCert_grid_col--extra{
+    flex:1 1 0;
+    min-width:0;
+  }
+  .valCert_grid_col--datos .valCert_card{
+    height:100%;
+    display:flex;
+    flex-direction:column;
+  }
+  .valCert_grid_col--datos .valCert_datos{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+  }
+  .valCert_grid_col--datos .valCert_dato{
+    padding:1.15rem 0;
+  }
+}
+
+/* ---------------------------------------------------------------------
+   Tarjeta base
+--------------------------------------------------------------------- */
+.valCert_card{
+  background:#FFFFFF;
+  border-radius:0;
+  border:1px solid var(--vc-borde);
+  box-shadow:0 30px 60px -28px rgba(10,27,46,.28);
+  padding:clamp(1.75rem, 4vw, 2.5rem);
+}
+
+.valCert_card--cargando{
+  display:flex;
+  align-items:center;
+  gap:.85rem;
+  color:var(--vc-texto-sec);
+  font-size:.95rem;
+}
+
+.valCert_spinner{
+  width:20px;
+  height:20px;
+  border:2.5px solid var(--vc-borde);
+  border-top-color:var(--vc-azul-inst);
+  border-radius:50%;
+  animation:vcGirar .8s linear infinite;
+}
+@keyframes vcGirar{ to{ transform:rotate(360deg); } }
+
+/* ---------------------------------------------------------------------
+   Tarjeta de resultado (válido / no encontrado)
+--------------------------------------------------------------------- */
+.valCert_card--ok,
+.valCert_card--error{
+  text-align:center;
+}
+
+.valCert_card--error .valCert_robot{
+  width:300px;
+  margin:0 auto 1rem;
+}
+
+#resultado .valCert_card--error{
+  max-width:640px !important;
+  width:100% !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+}
+
+.valCert_icono{
+  width:56px;
+  height:56px;
+  margin:0 auto 1rem;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.valCert_icono svg{ width:28px; height:28px; }
+
+.valCert_icono--ok{
+  background:var(--vc-verde-bg);
+  color:var(--vc-verde);
+}
+.valCert_icono--error{
+  background:var(--vc-ambar-bg);
+  color:var(--vc-ambar);
+}
+.valCert_icono--privacidad{
+  width:44px;
+  height:44px;
+  margin:0;
+  flex-shrink:0;
+  background:#EAF1F8;
+  color:var(--vc-azul-inst);
+}
+.valCert_icono--privacidad svg{ width:22px; height:22px; }
+
+.valCert_estado{
+  display:block;
+  font-family:var(--vc-font-display);
+  font-weight:700;
+  font-size:1.3rem;
+  margin-bottom:.6rem;
+}
+.valCert_estado--ok{ color:var(--vc-navy-950); }
+.valCert_estado--error{ color:var(--vc-navy-950); }
+
+.valCert_msg{
+  max-width:440px;
+  margin:0 auto 1.5rem;
+  font-size:.96rem;
+  line-height:1.6;
+  color:var(--vc-texto-sec);
+}
+
+/* ---------------------------------------------------------------------
+   Datos del certificado (solo código / fecha / estado)
+--------------------------------------------------------------------- */
+.valCert_datos{
+  display:flex;
+  flex-direction:column;
+  border-top:1px solid var(--vc-borde);
+  text-align:left;
+}
+.valCert_dato{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:1rem;
+  padding:.85rem 0;
+  border-bottom:1px solid var(--vc-borde);
+}
+.valCert_datoLabel{
+  font-size:.82rem;
+  color:var(--vc-texto-sec);
+}
+.valCert_datoValor{
+  font-size:.95rem;
+  font-weight:600;
+  color:var(--vc-navy-950);
+}
+
+/* Ajuste puntual: SOLO el valor de "Cargo" se separa un poco más de
+   su etiqueta. No afecta a Código, Nombre, DNI, Proyecto, Fecha de
+   emisión ni Estado. */
+.valCert_datoValor--cargo{
+  padding-left:1rem;
+}
+
+.valCert_datoValor--ok{ color:var(--vc-verde); }
+
+/* ---------------------------------------------------------------------
+   Tarjeta de privacidad
+--------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------
+   Robot dentro de la tarjeta de privacidad
+--------------------------------------------------------------------- */
+.valCert_robot{
+  display:block;
+  width:220px;
+  height:auto;
+  margin:0 auto .25rem;
+  background:transparent;
+  pointer-events:none;
+}
+
+.valCert_card--privacidad{
+  position:relative;
+  display:flex;
+  flex-wrap:wrap;
+  align-items:flex-start;
+  gap:1rem;
+  padding-top:1.75rem;
+  background:#F7FAFD;
+  box-shadow:0 18px 36px -26px rgba(10,27,46,.2);
+}
+.valCert_card--privacidad .valCert_robot{
+  width:220px;
+  flex:0 0 100%;
+  margin:0 auto .5rem;
+}
+.valCert_privTitulo{
+  display:flex;
+  align-items:center;
+  gap:.7rem;
+  margin-bottom:.4rem;
+}
+.valCert_privTitulo .valCert_icono--privacidad{
+  margin:0;
+}
+.valCert_privTexto h4{
+  margin:0;
+  font-family:var(--vc-font-display);
+  font-size:1rem;
+  font-weight:700;
+  color:var(--vc-navy-950);
+}
+.valCert_privTexto p{
+  margin:0;
+  font-size:.9rem;
+  line-height:1.6;
+  color:var(--vc-texto-sec);
+}
+
+/* ---------------------------------------------------------------------
+   Tarjeta CTA — solicitar certificado
+--------------------------------------------------------------------- */
+.valCert_card--cta{
+  background:var(--vc-navy-950);
+  border-color:rgba(255,255,255,.12);
+  color:#FFFFFF;
+  text-align:center;
+}
+.valCert_card--cta h4{
+  margin:0 0 .6rem;
+  font-family:var(--vc-font-display);
+  font-size:1.15rem;
+  font-weight:700;
+  color:#FFFFFF !important;
+}
+.valCert_card--cta p{
+  max-width:440px;
+  margin:0 auto 1.5rem;
+  font-size:.94rem;
+  line-height:1.6;
+  color:rgba(255,255,255,.75);
+}
+
+/* ---------------------------------------------------------------------
+   Botones
+--------------------------------------------------------------------- */
+.valCert_btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:.6rem;
+  padding:.9rem 1.75rem;
+  font-family:var(--vc-font-ui);
+  font-size:.92rem;
+  font-weight:600;
+  color:#FFFFFF;
+  background:var(--vc-navy-950);
+  border-radius:10px;
+  white-space:nowrap;
+  transition:background var(--vc-ease) .2s, transform var(--vc-ease) .2s, color var(--vc-ease) .2s;
+}
+.valCert_btn svg{ width:17px; height:17px; }
+.valCert_btn:hover{
+  background:var(--vc-azul-inst);
+  transform:translateY(-2px);
+}
+
+.valCert_btn--primario{
+  background:#FFFFFF;
+  color:var(--vc-navy-950);
+}
+.valCert_btn--primario:hover{
+  background:var(--vc-azul-claro);
+  color:#FFFFFF;
+  transform:translateY(-2px);
+}
+
+.valCert_btn--secundario{
+  background:var(--vc-azul-inst);
+  color:#FFFFFF;
+}
+.valCert_btn--secundario:hover{
+  background:var(--vc-navy-950);
+  transform:translateY(-2px);
+}
+
+@media (max-width:560px){
+  .valCert_card--privacidad{
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+  }
+}

@@ -1,0 +1,344 @@
+/* ===========================================================
+   CERTIFICACIONES — fila horizontal de sellos ISO, debajo de
+   Proyectos. Reutiliza la paleta y el fondo cuadriculado de
+   proyectos.css (variables --proy-*, con respaldo por si este
+   archivo se carga solo).
+   =========================================================== */
+
+.cert {
+  position: relative;
+  /* Padding vertical fluido: en pantallas ≤1240px se queda en el mismo
+     valor de siempre (90px/70px); a partir de ahí crece muy suavemente
+     hasta un tope, para que la sección respire más en monitores grandes
+     sin saltos bruscos entre resoluciones. */
+  padding:
+    clamp(90px, calc(90px + (100vw - 1240px) * 0.035), 130px)
+    20px
+    clamp(70px, calc(70px + (100vw - 1240px) * 0.03), 110px);
+  background:
+    repeating-linear-gradient(0deg, var(--proy-grid-linea, rgba(15, 52, 96, 0.045)) 0 1px, transparent 1px 64px),
+    repeating-linear-gradient(90deg, var(--proy-grid-linea, rgba(15, 52, 96, 0.045)) 0 1px, transparent 1px 64px),
+    var(--proy-blanco, #ffffff);
+  background-attachment: fixed, fixed, scroll;
+  overflow: hidden;
+}
+
+.cert .container {
+  position: relative;
+  width: 100%;
+  /* Igual que el padding: por debajo de 1240px no cambia nada; por
+     encima, el contenedor se ensancha de forma fluida (no a saltos)
+     hasta un máximo, para aprovechar Full HD, 2K, 4K y ultrawide sin
+     que el contenido se vea perdido en el centro de la pantalla. */
+  max-width: clamp(1240px, calc(1240px + (100vw - 1240px) * 0.35), 1900px);
+  margin: 0 auto;
+}
+
+/* ---------------------------------------------------------
+   ENCABEZADO — mismo criterio visual que el de Proyectos
+   --------------------------------------------------------- */
+.cert .section_header {
+  text-align: center;
+  margin-bottom: 0;
+}
+
+.cert .section_tag {
+  display: inline-block;
+  font-size: 0.78rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--proy-celeste, #2c86c7);
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.cert .subt {
+  font-size: clamp(2rem, 4vw, 2.9rem);
+  color: var(--proy-azul-oscuro, #081c36);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.cert .subt::after {
+  content: "";
+  display: block;
+  width: 64px;
+  height: 3px;
+  margin: 18px auto 0;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--proy-azul-corp, #0f3460), var(--proy-celeste-claro, #a9d6e5));
+}
+
+.cert .section_desc {
+  max-width: 620px;
+  margin: 20px auto 0;
+  color: var(--proy-gris-texto, #5c6773);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* ---------------------------------------------------------
+   FILA DE CERTIFICADOS — en desktop entran los 5 en una sola
+   línea; si no caben, la fila se acomoda en varias filas
+   (wrap) en vez de forzar scroll horizontal.
+   Los gaps también crecen de forma fluida en pantallas grandes,
+   en la misma proporción que los íconos, para que el espaciado
+   siga viéndose equilibrado y no apretado.
+   --------------------------------------------------------- */
+.cert_cont_icon {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  row-gap: clamp(32px, calc(32px + (100vw - 1240px) * 0.018), 60px);
+  column-gap: clamp(46px, calc(46px + (100vw - 1240px) * 0.028), 84px);
+  margin: 28px 0 0;
+  padding: 6px;
+}
+
+/* ---------------------------------------------------------
+   ÍCONO DE CERTIFICADO — renderCert() (script.js) inyecta, por
+   cada norma, un <a target="_blank"><svg class="cert_icon">
+   directamente dentro de #certificaciones. Sin tarjeta: solo
+   fondo blanco para que el sello resalte. El "currentColor"
+   del path hereda del color puesto en el <a>.
+
+   El tamaño es fluido: hasta 1240px de ancho se queda igual que
+   siempre (128px); de ahí en adelante crece proporcionalmente
+   (con tope) para que los sellos se vean más protagonistas en
+   monitores grandes, sin perder nitidez ni proporción (siguen
+   siendo cuadrados vía aspect-ratio).
+   --------------------------------------------------------- */
+.cert_cont_icon a {
+  flex: 0 0 auto;
+  width: clamp(128px, calc(128px + (100vw - 1240px) * 0.06), 210px);
+  height: auto;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--proy-azul-oscuro, #081c36);
+  text-decoration: none;
+  transition: transform 0.4s var(--proy-ease-suave, cubic-bezier(0.22, 1, 0.36, 1)),
+    color 0.4s ease;
+}
+
+/* Efecto hover: se conserva el desplazamiento hacia arriba de siempre
+   y se le suma un agrandamiento sutil. Al usar la misma "transition"
+   declarada arriba (no una nueva), la animación es igual de suave
+   tanto al entrar como al salir del hover. */
+.cert_cont_icon a:hover,
+.cert_cont_icon a:focus-visible {
+  transform: translateY(-4px) scale(1.08);
+  color: var(--proy-azul-oscuro, #081c36);
+}
+
+.cert_icon {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ---------------------------------------------------------
+   RESPONSIVE — de 5 en línea (desktop) pasa a 3 por fila en
+   tablet y 2 por fila en móvil, siempre visibles sin scroll.
+   FIX de espaciado: el padding-top de estos breakpoints se
+   volvió fluido (antes era 8px/6px fijo, lo que dejaba la
+   sección pegada a "Proyectos" en pantallas medianas/pequeñas).
+   El padding lateral e inferior no cambia. Pantallas >900px
+   siguen usando exclusivamente el clamp() de arriba en .cert,
+   sin ningún cambio.
+   --------------------------------------------------------- */
+@media (max-width: 900px) {
+  .cert { padding: clamp(44px, 8vw, 70px) 18px 56px; }
+  .cert_cont_icon { column-gap: 34px; row-gap: 28px; }
+  .cert_cont_icon a { width: calc((100% - 2 * 34px) / 3); height: auto; aspect-ratio: 1 / 1; max-width: 128px; }
+}
+
+@media (max-width: 560px) {
+  .cert { padding: clamp(40px, 11vw, 58px) 14px 46px; }
+  .cert_cont_icon { justify-content: center; column-gap: 26px; row-gap: 24px; margin: 22px 0 0; }
+  .cert_cont_icon a { width: calc((100% - 26px) / 2); height: auto; aspect-ratio: 1 / 1; max-width: 112px; }
+}
+
+@media (max-width: 360px) {
+  .cert_cont_icon { column-gap: 20px; row-gap: 20px; }
+  .cert_cont_icon a { width: calc((100% - 20px) / 2); max-width: 96px; }
+}
+
+/* ===========================================================
+   CTA — "Ver todos los certificados". Único botón visible de
+   la sección aparte de los sellos; no se muestra ninguna URL
+   como texto en ninguna parte, el enlace vive solo en el href.
+   =========================================================== */
+.cert_cta_wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: clamp(48px, calc(48px + (100vw - 1240px) * 0.022), 80px);
+}
+
+.cert_cta {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  padding: 13px 26px 13px 12px;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(120deg, var(--proy-azul-oscuro, #081c36), #123b63);
+  color: var(--proy-blanco, #ffffff);
+  text-decoration: none;
+  isolation: isolate;
+  overflow: hidden;
+  box-shadow: 0 6px 14px -10px rgba(8, 28, 54, 0.26);
+  transition:
+    transform 0.4s var(--proy-ease-suave, cubic-bezier(0.22, 1, 0.36, 1)),
+    box-shadow 0.4s var(--proy-ease-suave, cubic-bezier(0.22, 1, 0.36, 1));
+}
+
+.cert_cta::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(120deg, transparent 60%, rgba(44, 134, 199, 0.2) 100%);
+  opacity: 0.6;
+}
+
+.cert_cta_icon_wrap {
+  position: relative;
+  flex: 0 0 auto;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.14);
+  transition: background 0.45s ease, transform 0.45s var(--proy-ease-suave, cubic-bezier(0.22, 1, 0.36, 1));
+}
+
+.cert_cta_icon {
+  width: 17px;
+  height: 17px;
+  color: var(--proy-celeste-claro, #a9d6e5);
+}
+
+.cert_cta_check {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  right: 1px;
+  bottom: 1px;
+  color: var(--proy-blanco, #ffffff);
+}
+
+.cert_cta_text {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: left;
+  padding-left: 14px;
+}
+
+.cert_cta_text::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 2px;
+  bottom: 2px;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.cert_cta_eyebrow {
+  font-size: 0.63rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--proy-celeste-claro, #a9d6e5);
+}
+
+.cert_cta_title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--proy-blanco, #ffffff);
+}
+
+.cert_cta_arrow {
+  width: 13px;
+  height: 13px;
+  flex: 0 0 auto;
+  margin-left: 6px;
+  color: var(--proy-celeste-claro, #a9d6e5);
+  transition: transform 0.45s var(--proy-ease-suave, cubic-bezier(0.22, 1, 0.36, 1));
+}
+
+/* --------------------------- HOVER --------------------------- */
+.cert_cta:hover,
+.cert_cta:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px -10px rgba(8, 28, 54, 0.32);
+}
+
+.cert_cta:hover .cert_cta_icon_wrap,
+.cert_cta:focus-visible .cert_cta_icon_wrap {
+  background: rgba(255, 255, 255, 0.22);
+  transform: scale(1.06);
+}
+
+.cert_cta:hover .cert_cta_arrow,
+.cert_cta:focus-visible .cert_cta_arrow {
+  transform: translate(3px, -3px);
+}
+
+.cert_cta:active {
+  transform: translateY(-1px);
+}
+
+@media (max-width: 560px) {
+  .cert_cta_wrap { margin-top: 32px; }
+
+  .cert_cta {
+    width: 100%;
+    max-width: 272px;
+    padding: 9px 16px 9px 8px;
+    gap: 10px;
+    justify-content: flex-start;
+  }
+
+  .cert_cta_icon_wrap {
+    width: 28px;
+    height: 28px;
+  }
+
+  .cert_cta_icon {
+    width: 13px;
+    height: 13px;
+  }
+
+  .cert_cta_check {
+    width: 8px;
+    height: 8px;
+  }
+
+  .cert_cta_text {
+    padding-left: 10px;
+  }
+
+  .cert_cta_title {
+    font-size: 0.78rem;
+  }
+
+  .cert_cta_eyebrow {
+    font-size: 0.52rem;
+  }
+
+  .cert_cta_arrow {
+    width: 11px;
+    height: 11px;
+    margin-left: 4px;
+  }
+}

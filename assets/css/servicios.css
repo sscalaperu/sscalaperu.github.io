@@ -1,0 +1,452 @@
+/* ---------- 1. FUENTES ---------- */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap');
+
+
+:root {
+  /* Paleta */
+  --color-azul-900: #071B33;   
+  --color-azul-800: #0A2540;  
+  --color-azul-700: #123A63;   
+  --color-azul-tec: #0F6BA8;  
+  --color-azul-tec-light: #a6a6a6;
+
+  --color-blanco: #FFFFFF;
+  --color-gris-50:  #F7F9FB;  
+  --color-gris-100: #EEF2F6;   
+  --color-gris-300: #D3DAE2;   
+  --color-gris-500: #7A8896;   
+  --color-gris-700: #3D4852;   
+  --color-gris-900: #1A2229;   
+
+  --font-heading: 'Poppins', sans-serif;
+  --font-body: 'Inter', sans-serif;
+
+
+  --space-xs:  0.5rem;
+  --space-sm:  1rem;
+  --space-md:  1.5rem;
+  --space-lg:  2.5rem;
+  --space-xl:  4rem;
+  --space-2xl: 6rem;
+
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+
+  --shadow-sm: 0 1px 2px rgba(10, 37, 64, 0.04), 0 4px 10px rgba(10, 37, 64, 0.05);
+  --shadow-md: 0 4px 14px rgba(10, 37, 64, 0.08), 0 12px 28px rgba(10, 37, 64, 0.08);
+  --shadow-lg: 0 8px 20px rgba(10, 37, 64, 0.10), 0 28px 60px rgba(10, 37, 64, 0.16);
+  --shadow-brand: 0 22px 44px -12px rgba(15, 107, 168, 0.35);
+
+  /* Transiciones */
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-premium: cubic-bezier(0.16, 1, 0.3, 1); 
+  --transition-fast: 0.2s var(--ease);
+  --transition-med: 0.45s var(--ease-premium);
+
+  /* Contenedor */
+  --container-max: 1240px;
+  --container-pad: clamp(1.25rem, 4vw, 3rem);
+}
+
+/* ---------- 3. RESET BÁSICO ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  color: var(--color-gris-700);
+  background: var(--color-blanco);
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+img { max-width: 100%; display: block; height: auto; }
+
+h1, h2, h3, h4 {
+  font-family: var(--font-heading);
+  color: var(--color-gris-900);
+  margin: 0;
+  line-height: 1.2;
+}
+
+p { margin: 0; }
+
+:focus-visible {
+  outline: 2px solid var(--color-azul-tec);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--container-pad);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ==========================================================================
+   4. SECCIÓN — SERVICIOS
+   ========================================================================== */
+
+.servis {
+  --grid-linea: rgba(10, 37, 64, 0.06);
+
+  position: relative;
+  padding-block: clamp(0.5rem, 1vw, 0.85rem) var(--space-2xl);
+  background: var(--color-gris-50);
+  isolation: isolate;
+}
+
+/* Textura técnica de fondo — cuadrícula visible en toda la sección,
+   con degradado únicamente al final para pasar a la siguiente sección */
+.servis::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    repeating-linear-gradient(0deg, var(--grid-linea) 0 1px, transparent 1px 64px),
+    repeating-linear-gradient(90deg, var(--grid-linea) 0 1px, transparent 1px 64px);
+  background-attachment: fixed;
+  mask-image: linear-gradient(180deg, black 0%, black 85%, transparent 100%);
+}
+
+/* ---------- Encabezado de sección ---------- */
+.section_header {
+  max-width: 640px;
+  margin-inline: auto;
+  text-align: center;
+  margin-bottom: clamp(2.5rem, 6vw, var(--space-2xl));
+}
+
+.section_tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65em;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-azul-tec);
+  margin-bottom: var(--space-md);
+}
+
+
+.subt {
+  font-size: clamp(1.85rem, 3.4vw, 2.6rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  margin-bottom: var(--space-md);
+}
+
+.section_desc {
+  font-size: clamp(0.95rem, 1.4vw, 1.08rem);
+  color: var(--color-gris-500);
+  line-height: 1.75;
+  font-weight: 400;
+}
+
+/* ---------- Contenedor de tarjetas (3 + 2, se acomoda solo) ---------- */
+.serv_cont_targ {
+  --card-w: 300px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: stretch;
+  gap: clamp(1.75rem, 3.5vw, 3rem);
+}
+
+/* ---------- Tarjeta de servicio ---------- */
+.serv_targ {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 0 1 var(--card-w);
+  width: var(--card-w);
+  max-width: 100%; 
+  background: var(--color-blanco);
+  border: 1px solid var(--color-azul-tec-light);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  will-change: transform;
+  transition: transform 0.18s var(--ease), box-shadow 0.18s var(--ease);
+}
+
+.serv_targ:hover,
+.serv_targ:focus-within {
+  transform: translateY(-0.8px);
+  box-shadow: var(--shadow-sm), 0 6px 16px -8px rgba(10, 37, 64, 0.14);
+}
+
+/* Marca de esquina tipo "escuadra de plano técnico" */
+.serv_targ::after {
+  content: "";
+  position: absolute;
+  top: var(--space-md);
+  right: var(--space-md);
+  width: 22px;
+  height: 22px;
+  border-top: 1.5px solid var(--color-azul-tec);
+  border-right: 1.5px solid var(--color-azul-tec);
+  opacity: 0;
+  transform: translate(-6px, 6px);
+  transition: opacity var(--transition-fast), transform var(--transition-med);
+  z-index: 2;
+  filter: drop-shadow(0 1px 4px rgba(18, 9, 113, 0.489));
+  pointer-events: none;
+}
+
+.serv_targ:hover::after {
+  opacity: 1;
+  transform: translate(0, 0);
+}
+
+/* Fotografía */
+.serv_targ figure {
+  position: relative;
+  margin: 0;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--color-gris-100); 
+}
+
+
+.serv_targ figure::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, rgba(10, 37, 64, 0.14), rgba(15, 107, 168, 0.05));
+  mix-blend-mode: soft-light;
+  opacity: 1;
+  transition: opacity var(--transition-med);
+  z-index: 1;
+}
+
+.serv_targ:hover figure::before {
+  opacity: 0;
+}
+
+
+.serv_targ figure::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 30%;
+  background: linear-gradient(to top, rgba(7, 27, 51, 0.16), rgba(7, 27, 51, 0));
+  pointer-events: none;
+  z-index: 1;
+}
+
+.serv_targ figure img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  filter: saturate(1.05) contrast(1.01) brightness(1.01);
+  transform: scale(1.04);
+  transition: transform 0.7s var(--ease-premium);
+}
+
+.serv_targ:hover figure img {
+  transform: scale(1.046);
+}
+
+/* ---------- Ícono / insignia de categoría sobre la imagen ---------- */
+.serv_targ_badge {
+  position: absolute;
+  top: var(--space-md);
+  left: var(--space-md);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
+  color: var(--color-azul-tec);
+  z-index: 2;
+  transition: background var(--transition-med), color var(--transition-med), transform var(--transition-med);
+}
+
+.serv_targ_badge svg {
+  width: 22px;
+  height: 22px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.serv_targ:hover .serv_targ_badge {
+  background: var(--color-azul-tec);
+  color: var(--color-blanco);
+  transform: scale(1.007);
+}
+
+/* ---------- Cuerpo de texto ---------- */
+.serv_targ_body {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--space-md) var(--space-lg) var(--space-md);
+}
+
+.serv_targ_title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.35;
+  color: var(--color-gris-900);
+  margin-bottom: var(--space-xs);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(1.15rem * 1.35 * 3);
+}
+
+.serv_targ_desc {
+  font-size: 0.88rem;
+  color: var(--color-gris-500);
+  line-height: 1.55;
+}
+
+/* ==========================================================================
+   5. RESPONSIVE
+   ========================================================================== */
+
+/* Desktop / laptops (≥ 901px): la fila se reparte sola gracias a
+   flex-wrap + justify-content:center en .serv_cont_targ. Con 3 tarjetas
+   por fila, la fila sobrante de 2 ya queda centrada automáticamente. */
+@media (min-width: 901px) {
+  .section_header {
+    margin-bottom: 2.75rem;
+  }
+
+  .serv_targ {
+    flex: 0 1 320px;
+    width: 320px;
+    max-width: 340px;
+  }
+}
+
+/* Monitores grandes (≥ 1440px): el layout ya era flex-wrap +
+   justify-content:center, así que en realidad SIEMPRE podía acomodar
+   4 o 5 tarjetas por fila y centrar la sobrante — lo único que se lo
+   impedía era que el contenedor de esta sección estaba topado a
+   --container-max (1240px), un ancho que solo alcanza para 3 tarjetas.
+   Ensanchamos el contenedor únicamente para .servis (el resto del sitio
+   sigue usando --container-max sin cambios) para que la 4ª tarjeta
+   entre en la primera fila y la 5ª se centre sola debajo. No se toca
+   ningún tamaño, color ni animación de las tarjetas. */
+@media (min-width: 1440px) {
+  .servis { padding-block: 7rem; }
+  .serv_targ { max-width: 350px; }
+
+  .servis .container {
+    max-width: 1680px;
+  }
+}
+
+/* Monitores 2K / portátiles de alta resolución (≥ 1920px): ya hay
+   espacio de sobra para las 5 tarjetas en una sola fila, siempre
+   centradas y con el mismo tamaño que en el resto de resoluciones. */
+@media (min-width: 1920px) {
+  .servis .container {
+    max-width: 2100px;
+  }
+}
+
+/* Monitores 4K y pantallas ultrawide (≥ 2560px): damos un poco más de
+   aire, pero como solo hay 5 tarjetas la fila se mantiene en 5
+   columnas, centrada; nunca se estiran ni se deforma la cuadrícula. Si
+   en el futuro se agregan más tarjetas, flex-wrap seguirá calculando
+   solo el número de columnas justo que quepa en este ancho. */
+@media (min-width: 2560px) {
+  .servis .container {
+    max-width: 2200px;
+  }
+}
+
+/* Tablets (≤ 1024px) */
+@media (max-width: 1024px) {
+  .serv_cont_targ {
+    --card-w: 300px;
+    gap: var(--space-md);
+  }
+}
+
+/* Tablets verticales / celulares grandes (≤ 768px) */
+@media (max-width: 768px) {
+  .servis { padding-block: var(--space-xl); }
+
+  .serv_cont_targ { --card-w: 300px; }
+
+  .serv_targ_body {
+    padding: calc(var(--space-sm) + 6px) var(--space-md) var(--space-sm);
+  }
+
+  .serv_targ_title { font-size: 1.05rem; }
+  .serv_targ_badge { width: 40px; height: 40px; }
+  .serv_targ_badge svg { width: 20px; height: 20px; }
+}
+
+/* Celulares medianos (≤ 600px): 2 columnas */
+@media (max-width: 600px) {
+  .serv_cont_targ {
+    --card-w: calc(50% - (var(--space-md) / 2));
+    gap: var(--space-md);
+  }
+
+  .serv_targ_desc { display: none; } /* menos ruido visual en 2 columnas */
+}
+
+/* Celulares (≤ 520px): 1 columna, tarjetas angostas y centradas */
+@media (max-width: 520px) {
+  .serv_cont_targ {
+    --card-w: 100%;
+    gap: var(--space-sm);
+  }
+
+  .serv_targ {
+    max-width: 340px;
+    margin-inline: auto;
+  }
+
+  .serv_targ figure { aspect-ratio: 16 / 10; }
+
+  .serv_targ_desc { display: block; } /* en 1 columna sí hay espacio, la mostramos de nuevo */
+
+  .serv_targ:hover { transform: none; box-shadow: var(--shadow-sm); }
+  .serv_targ:hover figure img { transform: scale(1.02); }
+  .serv_targ:active { box-shadow: var(--shadow-md), var(--shadow-brand); }
+  .serv_targ:active figure img { transform: scale(1.04); }
+
+  .section_header { margin-bottom: var(--space-lg); }
+}

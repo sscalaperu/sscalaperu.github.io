@@ -1,0 +1,888 @@
+@import url("https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap");
+
+:root {
+  --navy-950: #071428;
+  --navy-900: #0a2647;
+  --blue-700: #145da0;
+  --blue-500: #2f86d1;
+  --sky-400:  #5fb3ef;
+  --white:    #ffffff;
+  --gray-100: #f4f7fb;
+
+  --font-display: "Sora", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Inter", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+
+  --shadow-tight: 0 10px 24px -12px rgba(7, 20, 40, 0.4);
+  --shadow-soft:  0 1px 2px rgba(7, 20, 40, 0.06);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --rhythm-xs: clamp(8px, 1.4vh, 28px);
+  --rhythm-sm: clamp(10px, 2vh, 40px);
+  --rhythm-md: clamp(12px, 2.6vh, 56px);
+  --rhythm-lg: clamp(16px, 3.4vh, 72px);
+}
+
+.inicio,
+.inicio *,
+.inicio *::before,
+.inicio *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.inicio img { display: block; max-width: 100%; }
+
+.inicio {
+  position: relative;
+  --hero-top-offset: var(--header-h, 0px);
+  --hero-bottom-offset: 0px;
+  min-height: max(480px, calc(min(100vh, 940px) - var(--hero-top-offset) - var(--hero-bottom-offset)));
+  min-height: max(480px, calc(min(100svh, 940px) - var(--hero-top-offset) - var(--hero-bottom-offset)));
+  max-height: max(480px, calc(min(100vh, 940px) - var(--hero-top-offset) - var(--hero-bottom-offset)));
+  max-height: max(480px, calc(min(100svh, 940px) - var(--hero-top-offset) - var(--hero-bottom-offset)));
+  overflow: hidden;
+  display: flex;
+  align-items: stretch;
+  color: var(--white);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  isolation: isolate;
+}
+
+@media (max-width: 767px) {
+  .inicio {
+    --hero-top-offset: 0px;
+    --hero-bottom-offset: var(--bottom-nav-h, 0px);
+  }
+}
+
+@media (min-aspect-ratio: 21/9) and (min-height: 600px) {
+  .inicio { min-height: min(100vh, 760px); max-height: min(100vh, 760px); }
+}
+
+/* Ajuste por ALTURA de viewport: comprime progresivamente los
+   espacios verticales del contenido para que siempre quepa dentro
+   de la caja fija del Hero (que no cambia de tamaño), sin tocar el
+   fondo ni el responsive por ancho existente. */
+@media (max-height: 760px) {
+  .inicio .container {
+    padding-top: clamp(24px, 4vh, 60px);
+    padding-bottom: clamp(28px, 5vh, 60px);
+  }
+  .inicio_content { gap: clamp(8px, 1.6vh, 24px); }
+  .inicio_meta { margin-top: clamp(10px, 2vh, 28px); padding-top: clamp(10px, 1.2vh, 16px); }
+}
+
+@media (max-height: 620px) {
+  .inicio .container {
+    padding-top: clamp(16px, 3vh, 40px);
+    padding-bottom: clamp(18px, 3.5vh, 40px);
+  }
+  .inicio_content { gap: clamp(6px, 1.2vh, 16px); }
+  .text_inicio .line1 { font-size: clamp(1.7rem, 2.6vh + 1rem, 3rem) !important; }
+  .text_inicio span { font-size: clamp(1rem, 1.4vh + 0.7rem, 1.4rem) !important; margin-top: clamp(4px, 0.8vh, 12px) !important; }
+  .inicio_desc { line-height: 1.4; margin-top: clamp(4px, 0.8vh, 10px); }
+  .inicio_actions { margin-top: clamp(8px, 1.4vh, 16px); }
+  .inicio_meta { margin-top: clamp(8px, 1.4vh, 18px); padding-top: clamp(8px, 1vh, 12px); }
+}
+
+@media (max-height: 480px) {
+  .inicio .container { padding-top: 12px; padding-bottom: 14px; }
+  .inicio_content { gap: 6px; }
+  .text_inicio .line1 { font-size: 1.5rem !important; line-height: 1.08; }
+  .text_inicio span { font-size: 0.92rem !important; margin-top: 4px !important; }
+  .inicio_desc { display: none; }
+  .inicio_actions { margin-top: 8px; }
+  .inicio_meta { margin-top: 8px; padding-top: 6px; }
+  .inicio_meta_num { font-size: 1rem !important; }
+  .inicio_meta_label { font-size: 0.55rem !important; }
+}
+
+.hero_slider {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background: var(--navy-950);
+}
+
+.slider_track { position: absolute; inset: 0; }
+
+.slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1.3s var(--ease-out);
+}
+
+.slide.is-active { opacity: 1; z-index: 1; }
+
+.slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 32%;
+  filter: brightness(1.1) contrast(1.03) saturate(1.02);
+}
+
+.hero_overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(100deg,
+      rgba(7, 20, 40, 0.86) 0%,
+      rgba(10, 38, 71, 0.72) 32%,
+      rgba(10, 38, 71, 0.34) 56%,
+      rgba(7, 20, 40, 0.08) 78%,
+      rgba(7, 20, 40, 0.2) 100%
+    ),
+    linear-gradient(0deg, rgba(7, 20, 40, 0.58) 0%, rgba(7, 20, 40, 0) 40%),
+    linear-gradient(180deg, rgba(7, 20, 40, 0.26) 0%, rgba(7, 20, 40, 0) 22%);
+  pointer-events: none;
+}
+
+.hero_grid {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse 80% 70% at 20% 30%, black 30%, transparent 80%);
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slide img { animation: none; }
+}
+
+.inicio .container {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  max-width: 1800px;
+  margin: 0;
+  padding: clamp(45px, 6vh, 100px)
+           clamp(24px, 5.5vw, 100px)
+           clamp(56px, 8vh, 100px);
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+@media (min-width: 1920px) {
+  .inicio .container {
+    max-width: 2000px;
+    padding-left: clamp(90px, 7vw, 150px);
+    padding-top: clamp(70px, 8vh, 120px);
+    padding-bottom: clamp(80px, 9vh, 120px);
+  }
+}
+@media (min-width: 2560px) {
+  .inicio .container {
+    max-width: 2260px;
+    padding-left: clamp(130px, 8vw, 220px);
+    padding-top: clamp(90px, 9vh, 150px);
+    padding-bottom: clamp(100px, 10vh, 150px);
+  }
+}
+
+.inicio_content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--rhythm-sm);
+  max-width: min(900px, 56vw);
+  width: 100%;
+  min-height: 0;
+}
+
+@media (max-width: 992px) {
+  .inicio_content { max-width: 100%; }
+}
+
+@media (min-width: 1440px) {
+  .inicio_content { max-width: min(1040px, 58vw); }
+}
+
+@media (min-width: 1920px) {
+  .inicio_content { max-width: min(1180px, 52vw); }
+}
+
+@media (min-width: 2560px) {
+  .inicio_content { max-width: min(1360px, 50vw); }
+}
+
+.text_inicio {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+  margin-top: 0;
+}
+
+.text_inicio .line1 {
+  display: block;
+  font-weight: 800;
+  font-size: clamp(2.7rem, 2.8vw + 1.5rem, 5.2rem);
+  letter-spacing: -0.022em;
+  line-height: 1.04;
+  color: var(--white);
+  filter: drop-shadow(0 6px 30px rgba(0, 0, 0, 0.6));
+}
+
+@media (max-width: 1200px) {
+  .text_inicio .line1 { font-size: clamp(2rem, 2vw + 1.3rem, 3.3rem); }
+}
+
+@media (max-width: 992px) {
+  .text_inicio .line1 { font-size: clamp(1.9rem, 3.6vw + 0.85rem, 3.05rem); }
+}
+
+@media (max-width: 820px) {
+  .text_inicio .line1 { font-size: clamp(1.8rem, 4.4vw + 0.55rem, 2.6rem); }
+}
+
+@media (max-width: 680px) {
+  .text_inicio .line1 {
+    font-size: clamp(2rem, 7.6vw, 2.55rem) !important;
+    line-height: 1.12;
+    letter-spacing: -0.012em;
+  }
+}
+
+@media (max-width: 360px) {
+  .text_inicio .line1 { font-size: clamp(1.75rem, 8.4vw, 2.05rem) !important; }
+}
+
+@media (min-width: 1440px) {
+  .text_inicio .line1 { font-size: clamp(3.3rem, 2.4vw + 1.6rem, 5rem); }
+}
+
+@media (min-width: 1920px) {
+  .text_inicio .line1 { font-size: clamp(3.9rem, 2.1vw + 2.2rem, 5.5rem); }
+}
+
+@media (min-width: 2560px) {
+  .text_inicio .line1 { font-size: clamp(4.8rem, 2.3vw + 2.8rem, 6.4rem); }
+}
+
+.text_inicio span {
+  display: block;
+  margin-top: clamp(10px, 1.3vw, 22px);
+  font-weight: 700;
+  font-size: clamp(1.4rem, 1.3vw + 0.98rem, 2.1rem);
+  letter-spacing: -0.006em;
+  line-height: 1.28;
+  color: rgba(255, 255, 255, 0.94);
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.6);
+}
+
+@media (max-width: 992px) {
+  .text_inicio span { font-size: clamp(1.15rem, 1.6vw + 0.75rem, 1.5rem); }
+}
+
+@media (max-width: 680px) {
+  .text_inicio span {
+    font-size: clamp(1.15rem, 4.2vw, 1.4rem) !important;
+    line-height: 1.3;
+  }
+}
+
+@media (max-width: 360px) {
+  .text_inicio span { font-size: 1.1rem !important; line-height: 1.32; }
+}
+
+@media (min-width: 1440px) {
+  .text_inicio span { font-size: clamp(1.6rem, 0.95vw + 1.2rem, 1.95rem); }
+}
+
+@media (min-width: 1920px) {
+  .text_inicio span { font-size: clamp(1.85rem, 0.9vw + 1.4rem, 2.3rem); }
+}
+
+@media (min-width: 2560px) {
+  .text_inicio span { font-size: clamp(2.05rem, 1vw + 1.4rem, 2.5rem); }
+}
+
+.inicio_desc {
+  font-size: clamp(0.92rem, 0.2vw + 0.85rem, 1.05rem);
+  margin-top: var(--rhythm-xs);
+  font-weight: 400;
+  line-height: 1.68;
+  color: rgba(255, 255, 255, 0.78);
+  max-width: 62ch;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.inicio_actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(12px, 1.4vw, 18px);
+  margin-top: var(--rhythm-sm);
+}
+
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: clamp(0.88rem, 0.22vw + 0.82rem, 0.98rem);
+  letter-spacing: 0.005em;
+  padding: clamp(14px, 1.1vw, 18px) clamp(26px, 1.9vw, 34px);
+  border-radius: 5px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: transform 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out),
+              background 0.3s ease, border-color 0.3s ease;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.btn:focus-visible { outline: 2px solid var(--sky-400); outline-offset: 3px; }
+
+.btn_primary {
+  background: linear-gradient(120deg, var(--blue-700), var(--blue-500));
+  color: var(--white);
+  box-shadow: var(--shadow-tight), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.btn_primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 30px -14px rgba(20, 93, 160, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.16);
+}
+
+.btn_primary:active { transform: translateY(-1px); }
+
+.btn_primary .arrow { transition: transform 0.3s var(--ease-out); }
+.btn_primary:hover .arrow { transform: translateX(4px); }
+
+.btn_secondary {
+  background: rgba(7, 20, 40, 0.32);
+  color: var(--white);
+  border-color: rgba(255, 255, 255, 0.34);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.btn_secondary:hover {
+  border-color: var(--sky-400);
+  background: rgba(95, 179, 239, 0.16);
+  transform: translateY(-2px);
+}
+
+.btn_secondary:active { transform: translateY(-1px); }
+
+.inicio_meta {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-wrap: nowrap !important;
+  align-items: flex-start;
+  gap: clamp(20px, 2.6vw, 40px);
+  margin-top: var(--rhythm-md);
+  padding-top: clamp(18px, 1.8vw, 22px);
+  border-top: 1px solid rgba(255, 255, 255, 0.22);
+  width: 100%;
+  max-width: 100%;
+  opacity: 1;
+  transform: none;
+  flex-shrink: 0;
+}
+
+.inicio_meta.will-rise {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .inicio_meta.will-rise { animation: none; opacity: 1; transform: none; }
+}
+
+.inicio_meta_item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1 1 0;
+  min-width: 0;
+  flex-shrink: 1;
+  padding-right: clamp(20px, 2.6vw, 40px);
+}
+
+.inicio_meta_item + .inicio_meta_item::before {
+  content: "";
+  position: absolute;
+  left: calc(-1 * clamp(10px, 1.3vw, 20px));
+  top: 3px;
+  bottom: 3px;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.inicio_meta_item:last-child { padding-right: 0; }
+
+.inicio_meta_num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(1.3rem, 1.3vw + 0.68rem, 2.05rem);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  display: inline-block;
+  color: var(--sky-400);
+  text-shadow: 0 0 18px rgba(95, 179, 239, 0.55), 0 2px 10px rgba(0, 0, 0, 0.35);
+  transform: scale(1);
+}
+
+.inicio_meta_num.is-counted {
+  animation: metaNumPop 0.45s var(--ease-out);
+}
+
+@keyframes metaNumPop {
+  0%   { transform: scale(1); }
+  45%  { transform: scale(1.12); text-shadow: 0 0 26px rgba(95, 179, 239, 0.8), 0 2px 10px rgba(0, 0, 0, 0.35); }
+  100% { transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .inicio_meta_num.is-counted { animation: none; }
+}
+
+.inicio_meta_label {
+  font-size: clamp(0.66rem, 0.3vw + 0.5rem, 0.78rem);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  line-height: 1.35;
+  color: rgba(255, 255, 255, 0.66);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.4);
+}
+
+.slider_progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 5;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.16);
+  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.25);
+  pointer-events: none;
+}
+
+.slider_progress_fill {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, var(--navy-900), var(--blue-700) 45%, var(--sky-400));
+  box-shadow: 0 0 10px rgba(95, 179, 239, 0.65), 0 0 2px rgba(95, 179, 239, 0.9);
+}
+
+.slider_progress_fill.is-animating { transition: width linear; }
+
+@media (max-width: 680px) {
+  .slider_progress { height: 4px; }
+}
+
+@keyframes heroRise {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .text_inicio .line1, .text_inicio span,
+  .inicio_desc, .inicio_actions, .inicio_meta {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .slider_progress { display: none; }
+}
+
+@media (max-width: 1200px) {
+  .inicio_content { max-width: min(880px, 68vw); }
+  .inicio {
+    min-height: max(420px, calc(88vh - var(--hero-top-offset) - var(--hero-bottom-offset)));
+    min-height: max(420px, calc(88svh - var(--hero-top-offset) - var(--hero-bottom-offset)));
+    max-height: max(420px, calc(88vh - var(--hero-top-offset) - var(--hero-bottom-offset)));
+    max-height: max(420px, calc(88svh - var(--hero-top-offset) - var(--hero-bottom-offset)));
+  }
+}
+
+@media (min-width: 993px) and (max-width: 1366px) {
+  .inicio {
+    min-height: max(420px, calc(min(82vh, 800px) - var(--hero-top-offset) - var(--hero-bottom-offset)));
+    min-height: max(420px, calc(min(82svh, 800px) - var(--hero-top-offset) - var(--hero-bottom-offset)));
+    max-height: max(420px, calc(min(82vh, 800px) - var(--hero-top-offset) - var(--hero-bottom-offset)));
+    max-height: max(420px, calc(min(82svh, 800px) - var(--hero-top-offset) - var(--hero-bottom-offset)));
+  }
+  .inicio_meta_num { font-size: clamp(1.25rem, 1.1vw + 0.7rem, 1.7rem); }
+  .inicio_meta_label { font-size: clamp(0.65rem, 0.28vw + 0.5rem, 0.75rem); }
+}
+
+
+@media (max-width: 992px) {
+  .inicio .container {
+    max-width: 100%;
+    padding: clamp(36px, 5.5vh, 72px) clamp(20px, 4.4vw, 60px) clamp(42px, 6vh, 68px);
+  }
+  .inicio_content { gap: clamp(14px, 2.2vw, 22px); }
+
+  .btn {
+    font-size: clamp(0.84rem, 0.8vw + 0.7rem, 0.94rem);
+    padding: clamp(12px, 1.4vw, 15px) clamp(20px, 2.4vw, 28px);
+  }
+
+  .inicio_meta {
+    flex-wrap: nowrap !important;
+    gap: clamp(14px, 2.2vw, 24px);
+    margin-top: clamp(22px, 5vh, 44px);
+    padding-top: clamp(14px, 1.5vw, 18px);
+  }
+  .inicio_meta_item { padding-right: clamp(14px, 2.2vw, 24px); min-width: 0; }
+  .inicio_meta_num { font-size: clamp(1.15rem, 1.1vw + 0.6rem, 1.6rem); }
+  .inicio_meta_label { font-size: clamp(0.62rem, 0.26vw + 0.48rem, 0.72rem); }
+
+  .inicio {
+    min-height: max(380px, calc(78vh - var(--hero-top-offset) - var(--hero-bottom-offset)));
+    min-height: max(380px, calc(78svh - var(--hero-top-offset) - var(--hero-bottom-offset)));
+    max-height: max(380px, calc(78vh - var(--hero-top-offset) - var(--hero-bottom-offset)));
+    max-height: max(380px, calc(78svh - var(--hero-top-offset) - var(--hero-bottom-offset)));
+  }
+}
+
+@media (max-width: 992px) {
+  .hero_overlay {
+    background:
+      linear-gradient(180deg,
+        rgba(7, 20, 40, 0.8) 0%,
+        rgba(7, 20, 40, 0.58) 38%,
+        rgba(7, 20, 40, 0.64) 68%,
+        rgba(7, 20, 40, 0.85) 100%
+      ),
+      linear-gradient(100deg, rgba(7, 20, 40, 0.5) 0%, rgba(7, 20, 40, 0.18) 100%);
+  }
+}
+
+@media (max-width: 820px) {
+  .inicio_desc { max-width: 48ch; }
+}
+
+@media (max-width: 680px) {
+
+  .inicio .container {
+    padding: clamp(16px, 4vh, 30px) clamp(20px, 6vw, 28px) clamp(18px, 3.5vh, 26px);
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .inicio {
+    --rhythm-xs: 12px;
+    --rhythm-sm: 16px;
+    --rhythm-md: 18px;
+    min-height: max(320px, calc(62vh - var(--hero-top-offset) - var(--hero-bottom-offset)));
+    min-height: max(320px, calc(62svh - var(--hero-top-offset) - var(--hero-bottom-offset)));
+    max-height: max(320px, calc(62vh - var(--hero-top-offset) - var(--hero-bottom-offset)));
+    max-height: max(320px, calc(62svh - var(--hero-top-offset) - var(--hero-bottom-offset)));
+  }
+
+  .inicio_content {
+    width: 100%;
+    max-width: 100%;
+    align-items: flex-start;
+    text-align: left;
+    gap: 14px;
+  }
+
+  .text_inicio span { margin-top: 10px; }
+
+  .inicio_desc {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    max-width: 38ch;
+  }
+
+  .inicio_actions {
+    width: 100%;
+    margin-top: 14px;
+    gap: 9px;
+  }
+
+  .btn {
+    flex: 1 1 auto;
+    padding: 13px 16px;
+    font-size: 0.88rem;
+    gap: 7px;
+  }
+
+  .inicio_meta {
+    flex-wrap: nowrap !important;
+    gap: clamp(8px, 3vw, 14px);
+    margin-top: clamp(16px, 4vh, 32px);
+    padding-top: 10px;
+  }
+
+  .inicio_meta_item {
+    padding-right: clamp(8px, 3vw, 14px);
+    min-width: 0;
+    flex: 1 1 0;
+  }
+  .inicio_meta_item + .inicio_meta_item::before { left: calc(-1 * clamp(4px, 1.5vw, 7px)); }
+
+  .inicio_meta_label {
+    font-size: clamp(0.58rem, 2vw, 0.7rem);
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+    line-height: 1.28;
+    max-width: 30ch;
+    word-break: break-word;
+  }
+  .inicio_meta_num { font-size: clamp(1.15rem, 5vw, 1.55rem); white-space: nowrap; }
+
+  .hero_overlay {
+    background:
+      linear-gradient(180deg,
+        rgba(7, 20, 40, 0.62) 0%,
+        rgba(7, 20, 40, 0.48) 28%,
+        rgba(7, 20, 40, 0.7) 72%,
+        rgba(7, 20, 40, 0.9) 100%
+      );
+  }
+}
+
+@media (max-width: 360px) {
+  .inicio .container { padding: 22px 14px 16px; }
+  .inicio_content { gap: 10px; }
+
+  .inicio_desc { font-size: 0.84rem; max-width: 32ch; }
+  .btn { padding: 10px 12px; font-size: 0.77rem; }
+  .inicio_meta { flex-wrap: nowrap !important; gap: clamp(6px, 2.4vw, 10px); }
+  .inicio_meta_item { padding-right: clamp(6px, 2.4vw, 10px); min-width: 0; flex: 1 1 0; }
+  .inicio_meta_item + .inicio_meta_item::before { left: calc(-1 * clamp(3px, 1.2vw, 5px)); }
+  .inicio_meta_num { font-size: clamp(0.8rem, 4.2vw, 0.9rem); white-space: nowrap; }
+  .inicio_meta_label { font-size: clamp(0.44rem, 2.2vw, 0.5rem); line-height: 1.2; }
+
+  .inicio {
+    min-height: max(280px, calc(58vh - var(--hero-top-offset) - var(--hero-bottom-offset)));
+    min-height: max(280px, calc(58svh - var(--hero-top-offset) - var(--hero-bottom-offset)));
+    max-height: max(280px, calc(58vh - var(--hero-top-offset) - var(--hero-bottom-offset)));
+    max-height: max(280px, calc(58svh - var(--hero-top-offset) - var(--hero-bottom-offset)));
+  }
+}
+
+@media (min-width: 1440px) {
+  .text_inicio span { margin-top: clamp(14px, 1.3vw, 24px); }
+  .inicio_desc { font-size: clamp(1rem, 0.28vw + 0.86rem, 1.15rem); max-width: 64ch; }
+  .inicio_actions { gap: clamp(16px, 1.3vw, 22px); }
+  .btn { font-size: clamp(0.92rem, 0.18vw + 0.85rem, 1.02rem); padding: clamp(16px, 1vw, 20px) clamp(30px, 1.8vw, 38px); }
+  .inicio_meta { gap: clamp(26px, 2.7vw, 48px); margin-top: clamp(24px, 2.6vh, 34px); padding-top: clamp(18px, 1.7vw, 24px); }
+  .inicio_meta_item { padding-right: clamp(26px, 2.7vw, 48px); }
+  .inicio_meta_num { font-size: clamp(1.75rem, 1.25vw + 0.78rem, 2.2rem); }
+  .inicio_meta_label { font-size: clamp(0.72rem, 0.3vw + 0.5rem, 0.84rem); }
+}
+
+@media (min-width: 1920px) {
+  .text_inicio span { margin-top: clamp(18px, 1.4vw, 28px); }
+  .inicio_desc { font-size: clamp(1.05rem, 0.32vw + 0.88rem, 1.25rem); max-width: 66ch; }
+  .inicio_actions { gap: clamp(18px, 1.4vw, 24px); }
+  .btn { font-size: clamp(0.98rem, 0.2vw + 0.9rem, 1.08rem); padding: clamp(18px, 1.1vw, 22px) clamp(34px, 2vw, 42px); }
+  .inicio_meta { gap: clamp(30px, 3vw, 56px); margin-top: clamp(26px, 2.8vh, 38px); padding-top: clamp(20px, 1.9vw, 26px); }
+  .inicio_meta_item { padding-right: clamp(30px, 3vw, 56px); }
+  .inicio_meta_num { font-size: clamp(1.95rem, 1.3vw + 0.85rem, 2.45rem); }
+  .inicio_meta_label { font-size: clamp(0.78rem, 0.32vw + 0.55rem, 0.92rem); }
+}
+
+@media (min-width: 2560px) {
+  .text_inicio span { margin-top: 32px; }
+  .inicio_desc { font-size: 1.35rem; max-width: 68ch; }
+  .btn { font-size: 1.18rem; padding: 24px 46px; }
+  .inicio_meta { gap: 64px; margin-top: 42px; padding-top: 28px; }
+  .inicio_meta_item { padding-right: 64px; }
+  .inicio_meta_num { font-size: 2.7rem; }
+  .inicio_meta_label { font-size: 0.98rem; }
+}
+
+/* =========================================================================
+   FIX: mantener los 3 indicadores (Proyectos / Años / Cumplimiento)
+   siempre visibles en una sola fila, en cualquier tamaño de pantalla.
+
+   Motivo del bug: .inicio tiene altura fija (min-height = max-height)
+   con overflow:hidden, y .inicio_content se centra verticalmente dentro
+   de .container (align-items:center). Cuando el texto (título + subtítulo
+   + descripción + botones) ocupa más alto de lo que cabe en esa caja fija,
+   el contenido se desborda por arriba y por abajo, y lo que sobra abajo
+   (los indicadores) queda recortado por el overflow:hidden.
+
+   Solución: estirar .inicio_content al 100% de la altura del Hero y
+   anclar .inicio_meta al borde inferior con margin-top:auto. Así los
+   indicadores siempre quedan pegados abajo, visibles, sin importar
+   cuánto ocupe el texto superior. No se toca tamaño de letra, colores,
+   imagen de fondo, botones ni ninguna otra sección.
+   ========================================================================= */
+.inicio_content {
+  height: 100%;
+  align-self: stretch;
+  min-height: 0;
+}
+
+.inicio_meta {
+  margin-top: auto !important;
+}
+
+/* -------------------------------------------------------------------------
+   FIX 2: garantizar visibilidad total en pantallas muy pequeñas.
+
+   Motivo: .inicio tiene min-height = max-height (caja de altura fija) con
+   overflow:hidden. En pantallas pequeñas, el título+subtítulo+descripción+
+   botones pueden ocupar casi toda esa altura fija, dejando 0 espacio real
+   para los indicadores; como la caja no puede crecer y overflow:hidden
+   recorta lo que sobra, los indicadores quedan cortados aunque ya estén
+   "empujados" al fondo con margin-top:auto.
+
+   Solución: quitar el límite superior (max-height) y el recorte
+   (overflow:hidden) SOLO en .inicio, dejando min-height intacto como piso.
+   Así el Hero puede crecer en alto lo justo y necesario para que el
+   contenido (incluidos los indicadores) siempre quepa completo, sin
+   recortarse, en cualquier pantalla. El fondo, overlay y grid son capas
+   absolutas (inset:0) por lo que se ajustan automáticamente a la nueva
+   altura y siguen cubriendo todo el Hero sin dejar huecos.
+   Esta regla, al no estar dentro de ningún @media y tener la misma
+   especificidad que las reglas anteriores, gana la cascada sobre TODOS
+   los max-height definidos arriba para cualquier ancho de pantalla.
+   ------------------------------------------------------------------------- */
+.inicio {
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+.hero_slider {
+  overflow: hidden;
+}
+
+/* -------------------------------------------------------------------------
+   FIX 3: mejorar el orden/ritmo visual en pantallas pequeñas (≤680px).
+
+   Motivo: al quitar el límite de altura (FIX 2), el Hero ahora se ajusta
+   al contenido en vez de a una caja fija. Eso resolvió el recorte, pero
+   dejó ver que los espacios verticales entre título, descripción, botones
+   e indicadores eran muy ajustados (estaban pensados para "comprimir"
+   todo dentro de una caja corta), así que en móvil se ve todo pegado y
+   los indicadores casi tocan el borde inferior del Hero.
+
+   Solución: dar más aire entre bloques (padding del contenedor, gap entre
+   elementos, separación antes de los indicadores) SOLO en este rango de
+   pantallas. No se toca tipografía, colores, ni el layout de otras
+   pantallas. Estas reglas están dentro de @media (max-width:680px) y
+   aparecen después de las reglas equivalentes más arriba, por lo que
+   ganan la cascada solo dentro de ese mismo rango de pantallas.
+   ------------------------------------------------------------------------- */
+@media (max-width: 680px) {
+  .inicio .container {
+    padding-top: clamp(28px, 6vh, 42px);
+    padding-bottom: clamp(30px, 6vh, 44px);
+  }
+
+  .inicio_content {
+    gap: clamp(18px, 3.2vh, 26px);
+  }
+
+  .inicio_desc {
+    margin-top: clamp(10px, 1.6vh, 16px);
+  }
+
+  .inicio_actions {
+    margin-top: clamp(14px, 2.4vh, 20px);
+  }
+
+  .inicio_meta {
+    margin-top: clamp(22px, 4.6vh, 34px) !important;
+    padding-top: 16px;
+    gap: clamp(14px, 4vw, 20px);
+  }
+
+  .inicio_meta_item {
+    padding-right: clamp(14px, 4vw, 20px);
+  }
+}
+
+@media (max-width: 360px) {
+  .inicio .container {
+    padding-top: clamp(24px, 5.5vh, 34px);
+    padding-bottom: clamp(26px, 5.5vh, 36px);
+  }
+
+  .inicio_content {
+    gap: clamp(14px, 2.6vh, 20px);
+  }
+
+  .inicio_meta {
+    margin-top: clamp(18px, 4vh, 26px) !important;
+    padding-top: 12px;
+  }
+}
+
+/* -------------------------------------------------------------------------
+   FIX 4: proporción correcta del Hero en pantallas tipo tablet (~681–1366px).
+
+   Motivo: en este rango, .inicio seguía usando min-height de 78vh/82vh
+   (definidos más arriba en el archivo), es decir, casi el 80% del alto
+   de la pantalla. Como el contenido (título, texto, botones e
+   indicadores) no necesita tanto espacio, sobraba una franja enorme de
+   fondo vacío entre los botones y los indicadores, haciendo que el Hero
+   se viera desproporcionadamente grande frente a la siguiente sección
+   ("¿Quiénes somos?").
+
+   Solución: bajar el mínimo de altura a ~55vh en este rango, para que la
+   caja se ajuste mejor al contenido real. Gracias al FIX 2 (max-height:
+   none), si en algún caso el contenido necesitara más espacio, el Hero
+   igual podría crecer sin recortarse — este cambio solo evita que sea
+   más alto de lo necesario por defecto. No se toca mobile (≤680px) ni
+   desktop (>1366px).
+   ------------------------------------------------------------------------- */
+@media (min-width: 681px) and (max-width: 1366px) {
+  .inicio {
+    min-height: max(340px, calc(55vh - var(--hero-top-offset) - var(--hero-bottom-offset)));
+    min-height: max(340px, calc(55svh - var(--hero-top-offset) - var(--hero-bottom-offset)));
+  }
+
+  .inicio .container {
+    padding-top: clamp(32px, 5vh, 60px);
+    padding-bottom: clamp(36px, 5.5vh, 60px);
+  }
+}
+
+
+/* =========================================================================
+   FIX 5: más espacio entre la descripción y los botones, SOLO en el
+   rango laptop / PC de escritorio (993px–1919px).
+   ========================================================================= */
+@media (min-width: 993px) and (max-width: 1919px) {
+  .inicio_actions {
+    margin-top: clamp(28px, 3.2vw, 42px);
+  }
+}
+
+
+/* =========================================================================
+   AUTO-FIT del Hero: complementa el FIX 2 existente (que sigue intacto
+   como red de seguridad). Este bloque solo prepara .inicio_content para
+   poder escalarse vía JS y así, en la mayoría de los casos, ajustarse
+   al espacio disponible SIN necesitar que el Hero crezca más allá del
+   viewport. Si en algún caso extremo el escalado no alcanza, el FIX 2
+   sigue ahí para evitar que los indicadores se corten (a costa de un
+   scroll puntual en ese caso límite, tal como ya funcionaba antes).
+   ========================================================================= */
+.inicio_content {
+  transform-origin: center center;
+  will-change: transform;
+  transition: transform 0.25s var(--ease-out);
+}

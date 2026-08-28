@@ -1,0 +1,114 @@
+/* =====================================================================
+   SCALA PERÚ — ERROR 404
+   Misma identidad visual que val_cert.css/contacto.css: azul
+   institucional / navy / blanco, malla de fondo, tipografía display.
+   ===================================================================== */
+:root{
+  --e404-navy-950:var(--navy-950, #0A1B2E);
+  --e404-azul-inst:#14477A;
+  --e404-azul-claro:#2E6FB0;
+  --e404-texto:#122033;
+  --e404-texto-sec:#3C4B5A;
+  --e404-borde:#E4E9EE;
+  --e404-font-ui:var(--font-ui, 'IBM Plex Sans', sans-serif);
+  --e404-font-display:var(--font-display, 'Space Grotesk', sans-serif);
+  --e404-ease:cubic-bezier(.4,0,.2,1);
+}
+
+.error404{
+  position:relative;
+  isolation:isolate;
+  min-height:calc(100vh - 5rem);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#FFFFFF;
+  padding:clamp(4rem, 9vw, 7rem) clamp(1.25rem, 5vw, 2rem);
+  font-family:var(--e404-font-ui);
+  color:var(--e404-texto);
+  text-align:center;
+}
+
+.error404_malla{
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  background-image:
+    linear-gradient(to right, rgba(20,71,122,.11) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(20,71,122,.11) 1px, transparent 1px);
+  background-size:64px 64px;
+  -webkit-mask-image:radial-gradient(ellipse 80% 75% at 50% 40%, #000 0%, transparent 92%);
+  mask-image:radial-gradient(ellipse 80% 75% at 50% 40%, #000 0%, transparent 92%);
+}
+
+.error404_content{
+  max-width:520px;
+  margin:0 auto;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+.error404_robot{
+  width:380px;
+  height:auto;
+  margin:0 auto 1.25rem;
+  background:transparent;
+  pointer-events:none;
+}
+
+.error404_code{
+  display:block;
+  font-family:var(--e404-font-display);
+  font-weight:700;
+  font-size:clamp(3.5rem, 9vw, 5.5rem);
+  line-height:1;
+  letter-spacing:-.02em;
+  color:var(--e404-azul-inst);
+  opacity:.8;
+  margin-bottom:-.2rem;
+}
+
+.error404_titulo{
+  font-family:var(--e404-font-display);
+  font-weight:700;
+  font-size:clamp(1.7rem, 3.4vw, 2.3rem);
+  line-height:1.2;
+  letter-spacing:-.01em;
+  color:var(--e404-navy-950);
+  margin:0 0 .85rem;
+}
+
+.error404_subtitulo{
+  max-width:420px;
+  margin:0 auto 2rem;
+  font-size:1rem;
+  line-height:1.65;
+  color:var(--e404-texto-sec);
+}
+
+.error404_btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:.6rem;
+  padding:.9rem 1.9rem;
+  font-family:var(--e404-font-ui);
+  font-size:.94rem;
+  font-weight:600;
+  color:#FFFFFF;
+  background:var(--e404-navy-950);
+  border-radius:10px;
+  white-space:nowrap;
+  transition:background var(--e404-ease) .2s, transform var(--e404-ease) .2s;
+}
+.error404_btn svg{ width:17px; height:17px; }
+.error404_btn:hover{
+  background:var(--e404-azul-inst);
+  transform:translateY(-2px);
+}
+
+@media (max-width:480px){
+  .error404_robot{ width:150px; }
+}

@@ -1,0 +1,145 @@
+/* ===========================================================
+   CLIENTES Y ALIANZAS — carrusel plano e infinito de logos.
+   Gira hacia la izquierda sin detenerse; se detiene solo al
+   pasar el mouse. Sin tarjetas: solo los íconos, en círculo.
+   Reutiliza la paleta de proyectos.css (variables --proy-*,
+   con respaldo por si este archivo se carga solo).
+   =========================================================== */
+
+.clientes {
+  position: relative;
+  /* Padding vertical fluido: hasta 1340px de ancho se queda igual que
+     siempre; de ahí en adelante crece muy suavemente (sin saltos) en
+     pantallas grandes, para dar más aire a la sección. */
+  padding:
+    clamp(20px, calc(20px + (100vw - 1340px) * 0.02), 48px)
+    20px
+    clamp(76px, calc(76px + (100vw - 1340px) * 0.03), 110px);
+  background:
+    repeating-linear-gradient(0deg, var(--proy-grid-linea, rgba(15, 52, 96, 0.045)) 0 1px, transparent 1px 64px),
+    repeating-linear-gradient(90deg, var(--proy-grid-linea, rgba(15, 52, 96, 0.045)) 0 1px, transparent 1px 64px),
+    var(--proy-blanco, #ffffff);
+  background-attachment: fixed, fixed, scroll;
+  overflow: hidden;
+}
+
+.clientes .container {
+  position: relative;
+  width: 100%;
+  /* Igual criterio que el padding: por debajo de 1340px no cambia
+     nada; por encima, el contenedor se ensancha de forma fluida hasta
+     un tope, para aprovechar Full HD, 2K, 4K y ultrawide. */
+  max-width: clamp(1340px, calc(1340px + (100vw - 1340px) * 0.35), 2000px);
+  margin: 0 auto;
+}
+
+/* ---------------------------------------------------------
+   ENCABEZADO — mismo criterio visual que el resto de secciones
+   --------------------------------------------------------- */
+.clientes .section_header {
+  text-align: center;
+  margin-bottom: 0;
+}
+
+.clientes .section_tag {
+  display: inline-block;
+  font-size: 0.78rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--proy-celeste, #2c86c7);
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.clientes .subt {
+  font-size: clamp(2rem, 4vw, 2.9rem);
+  color: var(--proy-azul-oscuro, #081c36);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.clientes .subt::after {
+  content: "";
+  display: block;
+  width: 64px;
+  height: 3px;
+  margin: 18px auto 0;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--proy-azul-corp, #0f3460), var(--proy-celeste-claro, #a9d6e5));
+}
+
+/* ---------------------------------------------------------
+   PISTA DEL CARRUSEL — recorta el desborde de la fila animada
+   y desvanece los bordes izquierdo/derecho. El ancho crece con
+   la misma proporción que .clientes .container (guarda siempre
+   los mismos 40px de margen relativo respecto a él), así que la
+   pista se sigue viendo centrada y bien encajada en cualquier
+   resolución. El degradado de los bordes se deja tal cual: es
+   parte del diseño visual que no hay que tocar.
+   --------------------------------------------------------- */
+.prueba_client {
+  position: relative;
+  margin: 40px auto 0;
+  max-width: clamp(1300px, calc(1300px + (100vw - 1340px) * 0.35), 1960px);
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 60px, #000 calc(100% - 60px), transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 60px, #000 calc(100% - 60px), transparent 100%);
+}
+
+/* El movimiento ahora lo controla script.js (requestAnimationFrame)
+   escribiendo directamente el transform en línea sobre este
+   elemento — así se evita cualquier salto al reiniciar el loop
+   y la pausa por mouse es 100% confiable (mouseenter/mouseleave
+   reales, no :hover). Por eso aquí ya NO hay @keyframes ni
+   animation-play-state. El gap crece de forma fluida junto con
+   los logos para que el espaciado siga viéndose equilibrado. */
+.clien_cont {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  width: max-content;
+  gap: clamp(55px, calc(55px + (100vw - 1340px) * 0.015), 85px);
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+/* Logos: hasta 1340px de ancho de pantalla se quedan en 120px, igual
+   que siempre; en pantallas más grandes crecen de forma fluida (con
+   tope) para tener más presencia visual, sin perder nitidez ni
+   proporción (siguen siendo círculos perfectos). */
+.clien_img {
+  flex: 0 0 auto;
+  width: clamp(120px, calc(120px + (100vw - 1340px) * 0.045), 170px);
+  height: clamp(120px, calc(120px + (100vw - 1340px) * 0.045), 170px);
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ---------------------------------------------------------
+   RESPONSIVE — sin cambios respecto al original: estos
+   breakpoints ya redefinen su propio padding/ancho/gap/tamaño,
+   así que el escalado fluido de arriba no los afecta.
+   --------------------------------------------------------- */
+@media (max-width: 900px) {
+  .clientes { padding: 56px 18px 62px; }
+  .prueba_client {
+    margin-top: 32px;
+    max-width: 560px;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 36px, #000 calc(100% - 36px), transparent 100%);
+    mask-image: linear-gradient(90deg, transparent 0, #000 36px, #000 calc(100% - 36px), transparent 100%);
+  }
+  .clien_cont { gap: 32px; }
+  .clien_img { width: 112px; height: 112px; }
+}
+
+@media (max-width: 560px) {
+  .clientes { padding: 44px 14px 50px; }
+  .prueba_client {
+    max-width: 300px;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 20px, #000 calc(100% - 20px), transparent 100%);
+    mask-image: linear-gradient(90deg, transparent 0, #000 20px, #000 calc(100% - 20px), transparent 100%);
+  }
+  .clien_cont { gap: 22px; }
+  .clien_img { width: 92px; height: 92px; }
+}
