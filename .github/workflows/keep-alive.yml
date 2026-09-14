@@ -1,0 +1,25 @@
+name: Supabase Keep Alive
+
+on:
+  schedule:
+    - cron: '0 0 * * 0,4'
+  workflow_dispatch:        
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase via RPC
+        run: |
+          response=$(curl -s -o /tmp/response.txt -w "%{http_code}" \
+            -X POST "https://fdhvhdctuhckmdbzjcvf.supabase.co/rest/v1/rpc/validar_certificado" \
+            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d '{"p_codigo": "PING-KEEPALIVE"}')
+          echo "HTTP status: $response"
+          cat /tmp/response.txt
+          if [ "$response" -ge 400 ]; then
+            echo "El ping falló"
+            exit 1
+          fi
