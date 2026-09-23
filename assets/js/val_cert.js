@@ -112,7 +112,7 @@ function tarjetaValido(codigo, nombre, dni, cargo, fechaEmision, proyecto, etiqu
 
       <div class="valCert_grid_col valCert_grid_col--extra">
         <div class="valCert_card valCert_card--privacidad">
-          <img src="assets/imagenes/robot-val.png" alt="" class="valCert_robot" aria-hidden="true">
+          <img src="assets/imagenes/robot-val.webp" alt="" class="valCert_e" aria-hidden="true">
           <div class="valCert_privTexto">
             <div class="valCert_privTitulo">
               <div class="valCert_icono valCert_icono--privacidad" aria-hidden="true">
@@ -155,7 +155,7 @@ function tarjetaValido(codigo, nombre, dni, cargo, fechaEmision, proyecto, etiqu
 function tarjetaNoEncontrado() {
   return `
     <div class="valCert_card valCert_card--error">
-      <img src="assets/imagenes/robot-val-null.png" alt="" class="valCert_robot" aria-hidden="true">
+      <img src="assets/imagenes/robot-val-null.webp" alt="" class="valCert_robot" aria-hidden="true">
       <span class="valCert_estado valCert_estado--error">Certificado no encontrado</span>
       <p class="valCert_msg">
         No existe ningún certificado registrado con el código ingresado. Verifique que el
@@ -182,7 +182,7 @@ function tarjetaLimiteIntentos() {
 function tarjetaFormatoInvalido() {
   return `
     <div class="valCert_card valCert_card--error">
-      <img src="assets/imagenes/robot-val-null.png" alt="" class="valCert_robot" aria-hidden="true">
+      <img src="assets/imagenes/robot-val-null.webp" alt="" class="valCert_robot" aria-hidden="true">
       <span class="valCert_estado valCert_estado--error">Código con formato incorrecto</span>
       <p class="valCert_msg">
         El código ingresado no tiene el formato de un certificado emitido por SCALA PERÚ. Revisa que lo hayas copiado completo y sin espacios.

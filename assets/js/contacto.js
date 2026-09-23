@@ -13,7 +13,7 @@ const conctactoForm = `
     <div class="contacto_card">
         <div class="contacto_formCol">
             <form id="formularioContacto" class="formularioContacto" enctype="multipart/form-data" action="https://api.web3forms.com/submit" method="POST">
-                <input type="hidden" name="access_key" value="4372314d-dab3-4f52-b0fc-2ed6c3c568d2">
+                <input type="hidden" name="access_key" value="abcb03bc-cbdf-44b4-86f4-6c7df6df78ac">
 
                 <div class="contacto_campo">
                     <label class="formularioLabel" for="fullName">
@@ -34,7 +34,7 @@ const conctactoForm = `
                         </svg>
                         Correo <span class="textResaltado"></span>
                     </label>
-                    <input class="formularioInput" type="email" id="email" name="email" placeholder="administracion@scala-peru.com" required>
+                    <input class="formularioInput" type="email" id="email" name="email" placeholder="ejemplo@gmail.com" required>
                 </div>
 
                 <div class="contacto_campo">
@@ -68,6 +68,10 @@ const conctactoForm = `
                     <textarea class="formularioInput" id="message" name="message" rows="4" placeholder="Mensaje..." required></textarea>
                 </div>
 
+                <div class="contacto_campo--full contacto_campo--captcha">
+                    <div class="h-captcha" data-captcha="true"></div>
+                </div>
+
                 <div class="contacto_campo--full contacto_accion">
                     <button type="submit" class="formularioBoton">
                         <span>Enviar consulta</span>
@@ -79,7 +83,7 @@ const conctactoForm = `
                     <p id="mensajeError" class="mensajeError"></p>
                 </div>
 
-                <input type="hidden" name="_captcha" value="false">
+                <input type="hidden" name="_captcha" value="true">
                 <input type="hidden" name="_template" value="table">
                 <input type="hidden" name="_next" value="/">
             </form>
@@ -87,7 +91,7 @@ const conctactoForm = `
 
         <div class="contacto_asistenteCol">
             <div class="contacto_robot">
-                <img class="contacto_robotImg" src="assets/imagenes/robot.png" alt="Asistente virtual corporativo SCALA PERÚ">
+                <img class="contacto_robotImg" src="assets/imagenes/robot.webp" alt="Asistente virtual corporativo SCALA PERÚ">
             </div>
 
             <div class="contacto_redes">

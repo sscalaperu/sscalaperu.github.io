@@ -3,7 +3,7 @@ const error404 = `
     <div class="error404_malla" aria-hidden="true"></div>
 
     <div class="error404_content">
-        <img src="assets/imagenes/error.png" alt="" class="error404_robot" aria-hidden="true">
+        <img src="assets/imagenes/error.webp" alt="" class="error404_robot" aria-hidden="true">
 
         <span class="error404_code">404</span>
         <h2 class="error404_titulo">Página no encontrada</h2>

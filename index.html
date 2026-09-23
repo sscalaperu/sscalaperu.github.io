@@ -19,11 +19,13 @@
 
     <meta http-equiv="Content-Security-Policy"
           content="default-src 'self';
-                   script-src 'self' https://kit.fontawesome.com https://cdn.jsdelivr.net;
+                   script-src 'self' https://kit.fontawesome.com https://cdn.jsdelivr.net https://web3forms.com https://js.hcaptcha.com https://*.hcaptcha.com 'sha256-vvt4KWwuNr51XfE5m+hzeNEGhiOfZzG97ccfqGsPwvE=';
                    style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com;
                    font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com https://ka-f.fontawesome.com;
                    img-src 'self' data: https://ka-f.fontawesome.com;
-                   connect-src 'self' https://fdhvhdctuhckmdbzjcvf.supabase.co https://ka-f.fontawesome.com;
+                   frame-src https://web3forms.com https://hcaptcha.com https://*.hcaptcha.com;
+                   connect-src 'self' https://fdhvhdctuhckmdbzjcvf.supabase.co https://ka-f.fontawesome.com https://api.web3forms.com https://hcaptcha.com https://*.hcaptcha.com;
+                   form-action 'self' https://api.web3forms.com;
                    object-src 'none';
                    base-uri 'self';
                    frame-ancestors 'none';">

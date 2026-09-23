@@ -32,7 +32,7 @@ const serviciosHtml = `
                     </div>
 
                     <img
-                        src="./assets/imagenes/servicios/junta.jpeg"
+                        src="./assets/imagenes/servicios/junta.webp"
                         alt="Preinversión">
 
                 </figure>
@@ -57,7 +57,7 @@ const serviciosHtml = `
                     </div>
 
                     <img
-                        src="./assets/imagenes/servicios/bypass.jpeg"
+                        src="./assets/imagenes/servicios/bypass.webp"
                         alt="Expedientes">
 
                 </figure>
@@ -82,7 +82,7 @@ const serviciosHtml = `
                     </div>
 
                     <img
-                        src="./assets/imagenes/servicios/obras.jpeg"
+                        src="./assets/imagenes/servicios/obras.webp"
                         alt="Supervisión">
 
                 </figure>
@@ -107,7 +107,7 @@ const serviciosHtml = `
                     </div>
 
                     <img
-                        src="./assets/imagenes/servicios/tasaciones.jpg"
+                        src="./assets/imagenes/servicios/tasaciones.webp"
                         alt="Tasaciones">
 
                 </figure>
@@ -132,7 +132,7 @@ const serviciosHtml = `
                     </div>
 
                     <img
-                        src="./assets/imagenes/servicios/topografia.jpeg"
+                        src="./assets/imagenes/servicios/topografia.webp"
                         alt="Alquiler de Equipos Topográficos">
 
                 </figure>
@@ -143,6 +143,31 @@ const serviciosHtml = `
                     </h3>
                     <p class="serv_targ_desc">
                         Estaciones totales, GPS y equipos de precisión para tu proyecto.
+                    </p>
+                </div>
+
+            </article>
+
+            <article class="serv_targ">
+
+                <figure>
+
+                    <div class="serv_targ_badge" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><path d="M3 17h1a2 2 0 0 0 4 0h6a2 2 0 0 0 4 0h1a1 1 0 0 0 1-1v-3l-2-4h-4l-2-4H6L3 9v7a1 1 0 0 0 0 1z"/><circle cx="7.5" cy="17.5" r="1.5"/><circle cx="17.5" cy="17.5" r="1.5"/></svg>
+                    </div>
+
+                    <img
+                        src="./assets/imagenes/servicios/camioneta.webp"
+                        alt="Alquiler de Camionetas">
+
+                </figure>
+
+                <div class="serv_targ_body">
+                    <h3 class="serv_targ_title">
+                        Alquiler de Camionetas
+                    </h3>
+                    <p class="serv_targ_desc">
+                        Movilidad para personal y equipos en proyectos de ingeniería.
                     </p>
                 </div>
 

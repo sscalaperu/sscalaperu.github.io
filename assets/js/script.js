@@ -67,6 +67,7 @@ async function router() {
         main.innerHTML = conctactoForm;
         $body.classList.add("movC")
 
+        cargarCaptchaWeb3Forms();
 
         scrollAlInicioSeccion("contacto");
 
@@ -310,9 +311,24 @@ function initClientesLoop(track) {
     requestAnimationFrame(step);
 }
 
+// Cargar (o recargar) el widget de captcha de Web3Forms
+// Se necesita reinyectar el script cada vez que el formulario de contacto
+// se vuelve a montar en el DOM, porque el script solo detecta los
+// elementos .h-captcha que existen en el momento en que se ejecuta.
+function cargarCaptchaWeb3Forms() {
+    const anterior = document.getElementById('web3forms-captcha-script');
+    if (anterior) anterior.remove();
+
+    const script = document.createElement('script');
+    script.id = 'web3forms-captcha-script';
+    script.src = 'https://web3forms.com/client/script.js';
+    script.async = true;
+    script.defer = true;
+    document.body.appendChild(script);
+}
+
 // Actualizar Año
 function actAnio(){
-
   const $anhoActual = document.getElementById('anhoActual');
 
   if (!$anhoActual) return; // seguridad

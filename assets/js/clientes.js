@@ -1,9 +1,9 @@
 const imgClientes = [
-  "ancash.png",
-  "cachachi.png",
-  "cajamarca.png",
-  "castilla.png",
-  "chota.png",
-  "lambayeque.png",
-  "sapalache.png",
+  "ancash.webp",
+  "cachachi.webp",
+  "cajamarca.webp",
+  "castilla.webp",
+  "chota.webp",
+  "lambayeque.webp",
+  "sapalache.webp",
 ];

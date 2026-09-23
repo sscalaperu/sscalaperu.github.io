@@ -31,7 +31,7 @@ const footerHtml = `
         </div>
 
         <span class="footerTexto">
-            Creado por <a href="https://www.instagram.com/millylx5/" target="_blank" rel="noopener noreferrer" class="footerUser">@MillyLx</a>
+           Creado por <a href="https://github.com/MillyLx" target="_blank" rel="noopener noreferrer" class="footerUser">@MillyLx</a>
         </span>
     </div>
 `;

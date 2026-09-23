@@ -83,10 +83,10 @@ const inicioHtml = `
    SLIDER — IMÁGENES
    ===================================================== */
 const imagenes = [
-    "./assets/imagenes/inicio/scala.png",
-    "./assets/imagenes/inicio/historia.png",
-    "./assets/imagenes/inicio/mision.png",
-    "./assets/imagenes/inicio/inicio.png",
+    "./assets/imagenes/inicio/scala.webp",
+    "./assets/imagenes/inicio/historia.webp",
+    "./assets/imagenes/inicio/mision.webp",
+    "./assets/imagenes/inicio/inicio.webp",
 ];
 
 function initHeroSlider() {
