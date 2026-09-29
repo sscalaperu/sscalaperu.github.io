@@ -74,8 +74,9 @@ function tarjetaValido(codigo, nombre, dni, cargo, fechaEmision, proyecto, etiqu
           </div>
           <span class="valCert_estado valCert_estado--ok">Certificado válido</span>
           <p class="valCert_msg">
-            Este certificado ha sido emitido oficialmente por <b>SCALA PERÚ</b> y se encuentra
-            registrado en nuestro sistema de validación.
+          Este certificado es auténtico. Ha sido emitido en el marco de las operaciones de nuestros consorcios y asociados, 
+          y su registro está validado oficialmente por el sistema de verificación de
+          <b>SCALA PERÚ</b>
           </p>
           <div class="valCert_datos">
             <div class="valCert_dato">
