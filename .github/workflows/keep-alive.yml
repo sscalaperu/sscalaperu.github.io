@@ -2,17 +2,22 @@ name: Supabase Keep Alive
 
 on:
   schedule:
-    # 4 veces por semana: domingo, lunes, miércoles y viernes (00:00 UTC)
-    - cron: '0 0 * * 0,1,3,5'
+    
+    - cron: '17 5 * * 1-6'
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   ping:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+
       - name: Ping Supabase via RPC (con reintentos)
         run: |
-          max_intentos=3
+          max_intentos=4
           espera=10
 
           for intento in $(seq 1 $max_intentos); do
@@ -25,6 +30,7 @@ jobs:
               -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
               -H "Content-Type: application/json" \
               -d '{"p_codigo": "PING-KEEPALIVE"}') || response=000
+            response=${response:-000}
 
             echo "HTTP status: $response"
             cat /tmp/response.txt 2>/dev/null; echo
@@ -43,3 +49,11 @@ jobs:
 
           echo "El ping falló tras $max_intentos intentos"
           exit 1
+
+      - name: Mantener activo el repo
+        if: always()
+        run: |
+          git config user.name "keepalive-bot"
+          git config user.email "keepalive-bot@users.noreply.github.com"
+          git commit --allow-empty -m "chore: keep-alive $(date -u +%F)"
+          git push
